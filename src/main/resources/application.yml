@@ -1,0 +1,43 @@
+server:
+  port: 8001
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1qaz@WSX
+    #url: jdbc:mysql://101.36.160.140:21029/esi?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT
+    url: jdbc:mysql://127.0.0.1:3306/esi?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT
+
+    hikari:
+      minimum-idle: 20
+      maximum-pool-size: 60
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 60000
+      validation-timeout: 3000
+      connection-test-query: select 1
+      auto-commit: true
+  jpa:
+    show-sql: false
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+  thymeleaf:
+    cache: false
+    mode: html
+  servlet:
+    multipart:
+      #location: /tmp
+      max-file-size: 20MB
+      max-request-size: 100MB
+#  mvc:
+#    async:
+#      request-timeout: 180000 #3分钟
+file:
+  staticAccessPath: /upload/**
+  uploadFolder: /Users/upload/
+
+#开启日志 如果级别：off(少)>error>warn>info>debug(多)>all
+logging:
+  level:
+    root: info

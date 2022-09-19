@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="jsoneditor/jsoneditor.min.css" rel="stylesheet" type="text/css">
+    <script src="jsoneditor/jsoneditor.min.js"></script>
+    <script src="jquery.min.js"></script>
+    <title>ECR_json</title>
+</head>
+<body>
+<div class="container">
+    <p class="lead">
+    <h3>Esi</h3>
+    </p>
+    <hr/>
+    <div class="row">
+        <div class="col-md-10">
+            <button class="btn btn-default" id="translate">Translate To HTML</button>
+            <br/>
+            <textarea hidden id="json-input" th:text="${htmlData}"></textarea><br/>
+
+            <div class="container-fluid" id="jsoneditor"></div>
+            <script>
+                // create the editor
+                const container = document.getElementById("jsoneditor")
+                const options = {}
+                const editor = new JSONEditor(container, options)
+                // set json
+                const initialJson = JSON.parse($('#json-input').val());
+                editor.set(initialJson)
+
+                $('#translate').on('click', function () {
+
+                    const updatedJson = editor.get()
+                    sessionStorage.clear();
+                    sessionStorage.setItem("esicData", JSON.stringify(updatedJson));
+                    location.href = "pdf";
+                });
+            </script>
+        </div>
+    </div>
+    <p class="lead">&nbsp;
+    </p>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#translate").click();
+    });
+</script>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <script src="jquery.min.js"></script>
+    <script src="jq-paginator.min.js"></script>
+    <script src="My97DatePicker/WdatePicker.js"></script>
+    <title>ESIC_admin</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="page-header">
+        <h3>
+            ESIC &nbsp;&nbsp;<small>admin:<span th:text="${session.userName}"></span>&nbsp;</small>
+            <small id="current-time"></small>
+        </h3>
+        <!-- <ul class="nav nav-pills">
+             <li role="presentation"><a href="/ModifyChallan">Modify Challan</a></li>
+             <li role="presentation"><a href="/ViewContributionHistory">ViewContributionHistory</a></li>
+             <li role="presentation"><a href="/OnlineChallanDoubleverification">OnlineChallan Doubleverification</a></li>
+         </ul> -->
+         <ul class="nav nav-pills">
+             <li role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
+             <li role="presentation"><a href="/op2contribution"><strong>operation-contribution</strong></a></li>
+             <li role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
+             <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
+             <!--
+             <li class="active" role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>
+             -->
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+
+            <form action="/saveChallan" class="form-horizontal" enctype="multipart/form-data" method="post">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Modify Challan</div>
+                    <div class="panel-body">
+                        <div class="col-sm-4">
+                            <label>Employer Code * ：</label>
+                            <select class="form-control" id="employerCode" name="employerCode">
+                                <option th:selected="${'67000909350001099' eq employerCode}">67000909350001099
+                                </option>
+                                <option th:selected="${'22001290260001099' eq employerCode}">22001290260001099
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="mmyyyy">Period：</label>
+                            <input class="form-control input-sm" id="mmyyyy" name="period"
+                                   onclick="WdatePicker({dateFmt:'yyyyMMM'})" th:value="${period}"
+                                   type="text"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">Modify Challan</div>
+                    <div class="panel-body">
+                        <div class="col-sm-4">
+                            <label for="challanNo">Challan No.</label>
+                            <input class="form-control input-sm" id="challanNo" name="challanNo" type="text"
+                                   th:value="${challan.getChallanNo()}"></input>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="challanDate">Challan Date.</label>
+                            <input class="form-control input-sm" id="challanDate" name="challanDate"
+                                   th:value="${challan.getChallanDate()}"
+                                   onclick="WdatePicker({dateFmt:'dd/mm/yyyy'})"
+                                   type="text"/>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label for="realizedDate">Realized Date.</label>
+                            <input class="form-control input-sm" id="realizedDate" name="realizedDate"
+                                   th:value="${challan.getRealizedDate()}"
+                                   onclick="WdatePicker({dateFmt:'dd/mm/yyyy'})"
+                                   type="text"/>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="depositedDate">Deposited Date.</label>
+                            <input class="form-control input-sm" id="depositedDate" name="depositedDate"
+                                   th:value="${challan.getDepositedDate()}"
+                                   onclick="WdatePicker({dateFmt:'dd/mm/yyyy'})"
+                                   type="text"/>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="amount">Amount.</label>
+                            <input class="form-control input-sm" id="amount" name="amount" type="text"
+                                   th:value="${challan.getAmount()}"></input>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="challanType">ChallanType.</label>
+                            <input class="form-control input-sm" id="challanType" name="challanType"
+                                   value="Contribution" type="text"></input>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="panel panel-info">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">Transaction Details</div>
+                    <div class="panel-body">
+
+                        <div class="col-sm-4">
+                            <label for="transactionStatus">Transaction status:</label>
+                            <input class="form-control input-sm" id="transactionStatus" name="transactionStatus"
+                                   value="Transaction Completed Successfully"
+                                   type="text"></input>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="employersCodeNo">Employer's Code No: </label>
+                            <input class="form-control input-sm" id="employersCodeNo" name="employersCodeNo"
+                                   th:value="${employerCode}"
+                                   type="text"></input>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="employersName">Employer's Name: </label>
+                            <input class="form-control input-sm" id="employersName" name="employersName"
+                                   value="PRIMEWINGS SERVICE PRIVATE LIMITED"
+                                   type="text"></input>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="challanPeriod">Challan Period: </label>
+                            <input class="form-control input-sm" id="challanPeriod" name="challanPeriod"
+                                   onclick="WdatePicker({dateFmt:'MMM-yyyy'})" th:value="${challan.getTransactionDetails().getChallanPeriod()}"
+                                   type="text"></input>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="challanNumber">Challan Number : </label>
+                            <input class="form-control input-sm" id="challanNumber" name="challanNumber"
+                                   th:value="${challan.getChallanNo()}"
+                                   type="text"></input>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="challanCreatedDate">Challan Created Date:</label>
+                            <input class="form-control input-sm" id="challanCreatedDate" name="challanCreatedDate"
+                                   th:value="${challan.getTransactionDetails().getChallanCreatedDate()}"
+                                   onclick="WdatePicker({dateFmt:'dd-mm-yyyy HH:mm:ss'})"
+                                   type="text"/>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="challanSubmittedDate">Challan Submitted Date:</label>
+
+                            <input class="form-control input-sm" id="challanSubmittedDate" name="challanSubmittedDate"
+                                   th:value="${challan.getTransactionDetails().getChallanSubmittedDate()}"
+                                   onclick="WdatePicker({dateFmt:'dd-mm-yyyy HH:mm:ss'})"
+                                   type="text"/>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="amountPaid">Amount Paid:</label>
+                            <input class="form-control input-sm" id="amountPaid" name="amountPaid" type="text"
+                                   th:value="${challan.getTransactionDetails().getAmountPaid()}"></input>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="transactionNumber">Transaction Number: </label>
+                            <input class="form-control input-sm" id="transactionNumber" name="transactionNumber"
+                                   th:value="${challan.getTransactionDetails().getTransactionNumber()}"
+                                   type="text"></input>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <input class="form-control input-sm" id="challan.id" name="id"
+                           th:value="${challan.getId()}"
+                           type="hidden"></input>
+
+                    <input class="form-control input-sm" id="transactionDetails.id" name="transactionDetails.id"
+                           th:value="${challan.getTransactionDetails().getId()}"
+                           type="hidden"></input>
+
+                    <input class="btn btn-default" type="submit" value="Submit"></input>
+                </div>
+
+            </form>
+        </div>
+        <p class="lead">&nbsp;
+
+        </p>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //location.href = "#view";
+
+        currentTime();
+
+    });
+
+    function currentTime() {
+        //当前时间
+        var curTime = new Date()
+        //枚举周天
+        var weekday = new Array(7);
+        weekday[0] = "Sunday";
+        weekday[1] = "Monday";
+        weekday[2] = "Tuesday";
+        weekday[3] = "Wednesday";
+        weekday[4] = "Thursday";
+        weekday[5] = "Friday";
+        weekday[6] = "Saturday";
+        //枚举月份
+        var month = new Array(12);
+        month[0] = "January";
+        month[1] = "February";
+        month[2] = "March";
+        month[3] = "April";
+        month[4] = "May";
+        month[5] = "June";
+        month[6] = "July";
+        month[7] = "August";
+        month[8] = "September";
+        month[9] = "October";
+        month[10] = "November";
+        month[11] = "December";
+        //当前日期信息
+        var strCurTime = "On " + weekday[curTime.getDay()] + ", " + month[curTime.getMonth()] + " " + curTime.getDate() + ", " + curTime.getFullYear();
+        $("#current-time").html(strCurTime);
+        console.log("strCurTime", strCurTime);
+    }
+</script>
+

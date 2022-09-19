@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <script src="jquery.min.js"></script>
+    <title>view_pdf</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="page-header">
+        <h3>
+            ESIC &nbsp;&nbsp;<small>admin:<span th:text="${session.userName}"></span>&nbsp;</small>
+            <small id="current-time"></small>
+        </h3>
+        <!--        <ul class="nav nav-pills">-->
+        <!--            <li role="presentation"><a href="/ModifyChallan">Modify Challan</a></li>-->
+        <!--            <li role="presentation"><a href="/ViewContributionHistory">ViewContributionHistory</a></li>-->
+        <!--            <li role="presentation"><a href="/OnlineChallanDoubleverification">OnlineChallan Doubleverification</a></li>-->
+        <!--        </ul>-->
+        <ul class="nav nav-pills">
+            <li role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
+            <li role="presentation"><a href="/op2contribution"><strong>operation-contribution</strong></a></li>
+            <li class="active" role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>
+            <li role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
+            <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
+            <!--            <li role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>-->
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">New Created Pdf</div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table id="example" class="table table-striped table-bordered table-hover table-condensed">
+                            <thead>
+                            <th>#id</th>
+                            <th>EmployerCode</th>
+                            <th>Period</th>
+                            <th>totalIpContribution</th>
+                            <th>totalEmployerContribution</th>
+                            <th>totalContribution</th>
+                            <th>totalGovernmentContribution</th>
+                            <th>totalMonthlywages</th>
+                            <th>pdf</th>
+                            </thead>
+                            <tbody id="rhtml">
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                    $.get("/findNewUpload", function (result) {
+                                        console.log(result);
+                                        let data = result.content;
+                                        let len = data.length;
+                                        for (let i = 0; i < len; i++) {
+                                            let html = `
+                                                     <tr>
+                                                        <td>${data[i].id}</td>
+                                                        <td>${data[i].employerCode}</td>
+                                                        <td>${data[i].period}</td>
+                                                        <td>${data[i].totalIpContribution}</td>
+                                                        <td>${data[i].totalEmployerContribution}</td>
+                                                        <td>${data[i].totalContribution}</td>
+                                                        <td>${data[i].totalGovernmentContribution}</td>
+                                                        <td>${data[i].totalMonthlywages}</td>
+                                                        <td><a target="_blank"
+                                                         href="/upload/${data[i].esiPdfName}">${data[i].esiPdfName}_pdfView</a></td>
+                                                    </tr>
+                                                    `;
+                                            $("#rhtml").append(html);
+                                        }
+                                    });
+                                });
+                            </script>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <p class="lead">&nbsp;
+        </p>
+    </div>
+</div>
+</body>
+</html>

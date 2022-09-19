@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <script src="jquery.min.js"></script>
+    <script src="jq-paginator.min.js"></script>
+    <script src="My97DatePicker/WdatePicker.js"></script>
+    <title>ESIC_admin</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="page-header">
+        <h3>
+            ESIC &nbsp;&nbsp;<small>admin:<span th:text="${session.userName}"></span>&nbsp;</small>
+            <small id="current-time"></small>
+        </h3>
+        <!--        <ul class="nav nav-pills">-->
+        <!--            <li role="presentation"><a href="/ModifyChallan">Modify Challan</a></li>-->
+        <!--            <li role="presentation"><a href="/ViewContributionHistory">ViewContributionHistory</a></li>-->
+        <!--            <li role="presentation"><a href="/OnlineChallanDoubleverification">OnlineChallan Doubleverification</a></li>-->
+        <!--        </ul>-->
+        <ul class="nav nav-pills">
+            <li class="active" role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
+            <li role="presentation"><a href="/op2contribution"><strong>operation-contribution</strong></a></li>
+            <li role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>
+            <li role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
+            <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
+            <!--            <li role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>-->
+
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="#">Monthly Contribution</a></li>
+                <li class="active">Modify Challan</li>
+            </ol>
+            <div class="panel panel-info">
+                <div class="panel-heading"><span class="text-left info">Modify Challan</span></div>
+                <div class="panel-body">
+                    <form action="/op2challan">
+                        <table class="table table-condensed table-hover table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Employer Code *
+                                    <select class="form-control" id="employerCode" name="employerCode">
+                                        <option th:selected="${'67000909350001099' eq employerCode}">
+                                            67000909350001099
+                                        </option>
+                                        <option th:selected="${'22001290260001099' eq employerCode}">
+                                            22001290260001099
+                                        </option>
+                                    </select>
+                                </th>
+                                <th>Challan Created Month *
+                                    <input class="form-control" id="period" name="period"
+                                           onclick="WdatePicker({dateFmt:'yyyyMMM'})" th:value="${period}"
+                                           type="text"/></th>
+
+                                <th class="text-center">
+                                    <button class="btn btn-info" id="query" type="submit">Query</button>
+                                </th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </form>
+                    <table class="table table-condensed table-hover table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>#id.</th>
+                            <th>Challan No.</th>
+                            <th>Challan Date.</th>
+                            <th>Realized Date</th>
+                            <th>Deposited Date</th>
+                            <th>Amount</th>
+                            <th>ChallanType</th>
+                        </tr>
+                        </thead>
+                        <tbody th:if="${challan != null}">
+                        <tr>
+                            <td th:text="${challan.getId()}"></td>
+                            <td th:text="${challan.getChallanNo()}"></td>
+                            <td th:text="${challan.getChallanDate()}"></td>
+                            <td th:text="${challan.getRealizedDate()}"></td>
+                            <td th:text="${challan.getDepositedDate()}"></td>
+                            <td th:text="${challan.getAmount()}"></td>
+                            <td th:text="${challan.getChallanType()}"></td>
+                            <td class="text-center">
+                                <button class="btn btn-info" type="button"
+                                        th:onclick="operationChallan([[${challan.getId()}]],[[${period}]],[[${employerCode}]])">
+                                    operation-challan
+                                </button>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                    <table class="table table-condensed table-hover table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>#id:</th>
+                            <th>Transaction status:</th>
+                            <th>Employer's Code No:</th>
+                            <th>Employer's Name:</th>
+                            <th>Challan Period:</th>
+                            <th>Challan Number:</th>
+                            <th>Challan Created Date</th>
+                            <th>Challan Submitted Date</th>
+                            <th>Amount Paid:</th>
+                            <th>Transaction Number:</th>
+                        </tr>
+                        </thead>
+                        <tbody th:if="${challan != null}">
+                        <td th:text="${challan.getTransactionDetails().getId()}"></td>
+                        <td th:text="${challan.getTransactionDetails().getTransactionStatus()}"></td>
+                        <td th:text="${challan.getTransactionDetails().getEmployersCodeNo()}"></td>
+                        <td th:text="${challan.getTransactionDetails().getEmployersName()}"></td>
+                        <td th:text="${challan.getTransactionDetails().getChallanPeriod()}"></td>
+                        <td th:text="${challan.getTransactionDetails().getChallanNumber()}"></td>
+                        <td th:text="${challan.getTransactionDetails().getChallanCreatedDate()}"></td>
+                        <td th:text="${challan.getTransactionDetails().getChallanSubmittedDate()}"></td>
+                        <td th:text="${challan.getTransactionDetails().getAmountPaid()}"></td>
+                        <td th:text="${challan.getTransactionDetails().getTransactionNumber()}"></td>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <p class="lead">&nbsp;
+        </p>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        currentTime();
+
+    });
+
+    function operationChallan(id, period, employerCode) {
+        console.log(id)
+        if (id != '')
+            location.href = "/s2challan?challanId=" + id + "&period=" + period + "&employerCode=" + employerCode;
+    }
+
+    function currentTime() {
+        //当前时间
+        var curTime = new Date()
+        //枚举周天
+        var weekday = new Array(7);
+        weekday[0] = "Sunday";
+        weekday[1] = "Monday";
+        weekday[2] = "Tuesday";
+        weekday[3] = "Wednesday";
+        weekday[4] = "Thursday";
+        weekday[5] = "Friday";
+        weekday[6] = "Saturday";
+        //枚举月份
+        var month = new Array(12);
+        month[0] = "January";
+        month[1] = "February";
+        month[2] = "March";
+        month[3] = "April";
+        month[4] = "May";
+        month[5] = "June";
+        month[6] = "July";
+        month[7] = "August";
+        month[8] = "September";
+        month[9] = "October";
+        month[10] = "November";
+        month[11] = "December";
+        //当前日期信息
+        var strCurTime = "On " + weekday[curTime.getDay()] + ", " + month[curTime.getMonth()] + " " + curTime.getDate() + ", " + curTime.getFullYear();
+        $("#current-time").html(strCurTime);
+        console.log("strCurTime", strCurTime);
+    }
+</script>
+

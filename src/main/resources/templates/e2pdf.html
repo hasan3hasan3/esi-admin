@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <script src="My97DatePicker/WdatePicker.js"></script>
+    <script src="jquery.min.js"></script>
+
+    <title>ESI_index</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="page-header">
+        <h3>
+            ESIC &nbsp;&nbsp;<small>admin:<span th:text="${session.userName}"></span>&nbsp;</small>
+            <small id="current-time"></small>
+        </h3>
+        <!---->
+        <!--        <ul class="nav nav-pills">-->
+        <!--            <li role="presentation"><a href="/ModifyChallan">Modify Challan</a></li>-->
+        <!--            <li role="presentation"><a href="/ViewContributionHistory">ViewContributionHistory</a></li>-->
+        <!--            <li role="presentation"><a href="/OnlineChallanDoubleverification">OnlineChallan Doubleverification</a></li>-->
+        <!--        </ul>-->
+        <ul class="nav nav-pills">
+
+            <li role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
+            <li role="presentation"><a href="/op2contribution"><strong>operation-contribution</strong></a></li>
+            <li role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>
+            <li class="active" role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
+            <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
+            <!--            <li role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>-->
+
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form action="/excel2pdf" class="form-horizontal" enctype="multipart/form-data" method="post"
+                  target="_blank">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Modify Challan</div>
+                    <div class="panel-body">
+                        <div class="col-sm-4">
+                            <label>Employer Code * ：</label>
+                            <select class="form-control" id="employerCode" name="employerCode" required>
+                                <option selected>67000909350001099</option>
+                                <option>22001290260001099</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="mmyyyy">Period：</label>
+                            <input class="form-control input-sm" id="mmyyyy" name="period"
+                                   onclick="WdatePicker({dateFmt:'yyyyMMM'})" required
+                                   type="text"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading"><h4>Excel to pdf.</h4></div>
+                    <div class="panel-body">
+                        <div class="form-group">
+
+                            <div class="col-sm-12">
+                                <label for="excel_upload_txt">Choose excel to upload</label>
+                                <input accept=".xls,.xlsx" id="excel_upload_txt" name="file" required
+                                       type="file"></input></div>
+                        </div>
+
+                        <input class="btn btn-warning" id="Check" type="button" value="Check"></input>
+
+                        <input class="btn btn-default active" id="Submit" type="submit" disabled value="Submit"></input>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <p class="lead">&nbsp;
+        </p>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Check").click(function () {
+            var employerCodeV = $("#employerCode").val();
+            var periodV = $("#mmyyyy").val();
+            //alert(periodV);
+            //console.log(periodV,employerCodeV)
+            if(periodV==''||employerCodeV==''){
+                alert('Select Criteria!');
+                return false;
+            }
+            $.ajax({
+                type: 'POST', // 请求的方式
+                url: '/getEsihistoryTotalRepository', // 请求的 URL 地址
+                data: { // 要提交给服务器的数据
+                    employerCode: employerCodeV,
+                    period: periodV,
+                },
+                success: function (res) { // 请求成功之后的回调函数
+                    console.log(res)
+                    if(res=='fail'){
+                        $("#Submit").attr("disabled","disabled");
+                        alert('Data Already exists!');
+                    }
+                    if(res=='success'){
+                        $("#Submit").removeAttr("disabled");//去除input元素的disabled属性
+                    }
+                }
+            })
+        });/**/
+
+    });
+</script>

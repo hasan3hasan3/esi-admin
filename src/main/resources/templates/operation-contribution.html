@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <script src="jquery.min.js"></script>
+    <script src="jq-paginator.min.js"></script>
+    <script src="My97DatePicker/WdatePicker.js"></script>
+    <title>ESIC_admin</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="page-header">
+        <h3>
+            ESIC &nbsp;&nbsp;<small>admin:<span th:text="${session.userName}"></span></small>
+            <small id="current-time"></small>
+        </h3>
+        <!--
+         <ul class="nav nav-pills">
+             <li role="presentation"><a href="/ModifyChallan">Modify Challan</a></li>
+             <li role="presentation"><a href="/ViewContributionHistory">ViewContributionHistory</a></li>
+             <li role="presentation"><a href="/OnlineChallanDoubleverification">OnlineChallan Doubleverification</a></li>
+         </ul>-->
+        <ul class="nav nav-pills">
+            <li role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
+            <li class="active" role="presentation"><a
+                    href="/op2contribution"><strong>operation-contribution</strong></a></li>
+            <li role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>
+            <li role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
+            <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
+            <!--            <li role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>-->
+
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="#">Monthly Contribution</a></li>
+                <li class="active">View History</li>
+            </ol>
+            <div class="panel panel-info">
+                <div class="panel-heading"><span class="text-left info">View History</span></div>
+                <div class="panel-body">
+                    <form action="/op2contribution">
+                        <table class="table table-condensed table-hover table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Employer Code *
+                                    <select class="form-control" id="employerCode" name="employerCode">
+                                        <option th:selected="${'67000909350001099' eq employerCode}">67000909350001099
+                                        </option>
+                                        <option th:selected="${'22001290260001099' eq employerCode}">22001290260001099
+                                        </option>
+                                    </select>
+                                </th>
+                                <th>Period *
+                                    <input class="form-control" id="period" name="period"
+                                           onclick="WdatePicker({dateFmt:'yyyyMMM'})" th:value="${period}" required
+                                           type="text"/></th>
+                                <th class="text-center">
+                                    <button class="btn btn-info" id="view" type="submit">Query</button>
+                                </th>
+                                <th class="text-center">
+                                    <button class="btn btn-success" id="op2challan" type="button"
+                                            th:onclick="operationChallan([[${period}]],[[${employerCode}]])">
+                                        operation-challan
+                                    </button>
+                                </th>
+                                <th class="text-center">
+                                    <input accept=".pdf" multiple name="file" placeholder="esiPdf"
+                                           id="upload_esiPdf_file" type="file"></input>
+                                </th>
+                                <th class="text-center">
+                                    <button type="button" class="btn btn-primary"
+                                            th:onclick="upload_esiPdf([[${period}]],[[${employerCode}]])">uploadEsiPdf
+                                    </button>
+                                </th>
+                                <th class="text-center">
+                                    <button type="button" class="btn btn-danger"
+                                            th:onclick="del()">delete
+                                    </button>
+                                </th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </form>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0"
+                             aria-valuemin="0"
+                             aria-valuemax="100" style="width: 0%;">
+                            0%
+                        </div>
+                    </div>
+                    <table class="table table-condensed table-hover table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>#id</th>
+                            <th>#EsiPdfName</th>
+                            <th>TotalIpContribution</th>
+                            <th>TotalEmployerContribution</th>
+                            <th>TotalContribution</th>
+                            <th>TotalGovernmentContribution</th>
+                            <th>TotalMonthlywages</th>
+                        </tr>
+                        <tr th:if="${dataH != null}">
+                            <td th:text="${dataH.getId()}"></td>
+                            <td>
+                                <button type="button" class="btn btn-link"
+                                        th:onclick="printEsiPdf([[${dataH.getEsiPdfName()}]])">
+                                    <span th:text="${dataH.getEsiPdfName()}"></span>
+                                </button>
+                            </td>
+                            <td th:text="${dataH.getTotalIpContribution()}"></td>
+                            <td th:text="${dataH.getTotalEmployerContribution()}"></td>
+                            <td th:text="${dataH.getTotalContribution()}"></td>
+                            <td th:text="${dataH.getTotalGovernmentContribution()}"></td>
+                            <td th:text="${dataH.getTotalMonthlywages()}"></td>
+                        </tr>
+                        </thead>
+                    </table>
+                    <table class="table table-condensed table-hover table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>#id</th>
+                            <th>Sl No.</th>
+                            <th>DIP</th>
+                            <th>Insurance Number</th>
+                            <th>Insured Person</th>
+                            <th>No.of Days Worked</th>
+                            <th>Total Monthly Wages</th>
+                            <th>IP Contribution</th>
+                            <th>Reason</th>
+                        </tr>
+                        </thead>
+                        <tbody th:if="${data != null}">
+                        <tr th:each="data,dataStat:${data.getContent()}">
+                            <td th:text="${data.id}"></td>
+                            <td th:text="${dataStat.index+1}"></td>
+                            <td th:text="${data.dip}">-</td>
+                            <td th:text="${data.insuranceNumber}"></td>
+                            <td th:text="${data.insuredPerson}"></td>
+                            <td th:text="${data.noofDaysWorked}"></td>
+                            <td th:text="${data.totalMonthlyWages}"></td>
+                            <td th:text="${data.ipContribution}"></td>
+                            <td th:text="${data.reason}">-</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <ul class="pagination text-right" id="pageNav"></ul>
+                </div>
+            </div>
+
+
+        </div>
+        <p class="lead">&nbsp;
+            <input id="totalPages" th:value="${data.getTotalPages()}" type="hidden"></input>
+            <input id="p" th:value="${p}" type="hidden"></input>
+            <span th:if="${dataH != null}">
+             <input id="contributionId" th:value="${dataH.getId()}" type="hidden">
+            </span>
+        </p>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var period = $("#period").val();
+        var employerCode = $("#employerCode").val();
+        var p = parseInt($("#p").val());
+        var t = parseInt($("#totalPages").val());
+        console.log(p, t);
+        if (t > 0) {
+            $('#pageNav').jqPaginator({
+                totalPages: t,
+                visiblePages: 10,
+                currentPage: p,
+                onPageChange: function (num, type) {
+                    if (type == 'change') {
+                        location.href = "/op2contribution?p=" + num + "&period=" + period + "&employerCode=" + employerCode;
+                    }
+                    console.log(num, type)
+                    //location.href = "/txtpdf2pf4ecr?p=1";
+                }
+            });
+        }
+
+        currentTime();
+    });
+
+    function operationChallan(period, employerCode) {
+        if (period != '')
+            location.href = '/op2challan?period=' + period + "&employerCode=" + employerCode;
+    }
+
+    function currentTime() {
+        //当前时间
+        var curTime = new Date()
+        //枚举周天
+        var weekday = new Array(7);
+        weekday[0] = "Sunday";
+        weekday[1] = "Monday";
+        weekday[2] = "Tuesday";
+        weekday[3] = "Wednesday";
+        weekday[4] = "Thursday";
+        weekday[5] = "Friday";
+        weekday[6] = "Saturday";
+        //枚举月份
+        var month = new Array(12);
+        month[0] = "January";
+        month[1] = "February";
+        month[2] = "March";
+        month[3] = "April";
+        month[4] = "May";
+        month[5] = "June";
+        month[6] = "July";
+        month[7] = "August";
+        month[8] = "September";
+        month[9] = "October";
+        month[10] = "November";
+        month[11] = "December";
+        //当前日期信息
+        var strCurTime = "On " + weekday[curTime.getDay()] + ", " + month[curTime.getMonth()] + " " + curTime.getDate() + ", " + curTime.getFullYear();
+        $("#current-time").html(strCurTime);
+        console.log("strCurTime", strCurTime);
+    }
+
+
+    function upload_esiPdf(period, employerCode) {
+        var contributionId = $("#contributionId").val();
+        console.log("uploadClick", contributionId);
+        if (typeof (contributionId) == "undefined") {
+            alert('Query data is null !!!');
+            return false;
+        }
+        var upload_esiPdf_file = $("#upload_esiPdf_file")[0].files[0];
+        //console.log(challan_pdf, payment_pdf)
+        if (typeof (upload_esiPdf_file) != "undefined") {
+            // 构建数据
+            var fileData = new FormData();
+            fileData.append('id', contributionId);
+            fileData.append('file', upload_esiPdf_file); // file 对象
+            console.log("fileData", fileData);
+            uploadEsiPdf(fileData, period, employerCode);
+        } else {
+            alert('file is null !!!');
+            return false;
+        }
+    }
+
+    function uploadEsiPdf(fileData, period, employerCode) {
+        $.ajax('/uploadEsiPdf', {
+            method: 'POST',
+            data: fileData,
+            processData: false, // 默认 | 不处理数据
+            contentType: false, // 默认 | 不设置内容类型
+            success: function (res) {
+                //console.log(res);
+                if (res == 'success') {
+                    //$("#id").addClass("btn-success");
+                    //alert('upload success!!!');
+                    //getRecentList();
+                    location.href = '/op2contribution?period=' + period + "&employerCode=" + employerCode;
+                    //$(".progress-bar").css("width", "100%");
+                }
+            },
+            xhrFields: {
+                onprogress: function (progress) {
+                    console.log("progress", progress);
+                    if (progress.lengthComputable) {
+                        var percentage = Math.floor(progress.loaded / progress.total * 100);
+                        console.log(percentage)
+                        $(".progress-bar").css("width", percentage + "%");
+                        $(".progress-bar").attr("aria-valuenow", percentage).text(percentage + "%");
+                    }
+                }
+            }
+        })
+    }
+
+    function printEsiPdf(esiPdfName) {
+        console.log("printEsiPdf:esiPdfName", esiPdfName);
+        if (esiPdfName != '') {
+            var obj = new Object();
+            obj.name = "esi";
+            //请求后台 url ，forword 真实html——file.path
+            var url = "/upload/" + esiPdfName;
+            var modalDialog = window.open(url, obj, "height=400, width=500,top=100,left=100");
+            console.log("ModalDialog", modalDialog)
+        }
+    }
+
+    function del() {
+        var contributionId = $("#contributionId").val();
+        console.log("uploadClick", contributionId);
+        if (typeof (contributionId) == "undefined") {
+            alert('no id !!!');
+            return false;
+        } else {
+            if (confirm("confirm delete?")) {
+                location.href = '/del?id=' + contributionId;
+            }
+        }
+
+    }
+
+</script>
+

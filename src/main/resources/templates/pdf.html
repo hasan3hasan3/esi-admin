@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <script src="jquery.min.js"></script>
+
+    <script type="text/javascript">
+        // let time_hm = new Date().getTime()
+        // document.title = 'esi_' + time_hm
+        $(document).ready(function () {
+            $("#previewAndDown").click();
+            window.addEventListener('afterprint', () => {
+                window.close();
+            });
+        });
+        function previewAndDown() {
+            window.print();
+        }
+    </script>
+    <script type="module" crossorigin src="/assets/index.e100a4c9.js"></script>
+    <link rel="stylesheet" href="/assets/index.acaed851.css">
+</head>
+<body>
+<button id="previewAndDown" onclick="previewAndDown()" style="position: fixed; z-index: 100">SavePDF</button>
+
+<div
+        class="w-[2336px] h-[1653px] page-container bg-white m-auto mt-10 relative bg-no-repeat bg-contain"
+>
+    <div class="w-full">
+        <img src="/assets/logo.ec5d9250.jpeg" alt="" class="w-full" />
+        <div class="absolute text-[30px] top-[181px] left-[515px] current-month"></div>
+    </div>
+    <div class="first-page">
+        <div class="w-[1709px] content">
+            <div class="header text-[24px] font-bold">
+                <div class="h-[67px] leading-[98px] tracking-[.01em] flex flex-nowrap">
+                    <div class="pl-[15px] w-[310px] border-svg-ftl">Total IP Contribution</div>
+                    <div class="pl-[22px] w-[398px] border-svg-tl">Total Employer Contribution</div>
+                    <div class="pl-[7px] w-[261.5px] border-svg-tl">Total Contribution</div>
+                    <div class="pl-[13px] w-[433px] border-svg-tl">Total Government Contribution</div>
+                    <div class="pl-[13px] w-[295px] border-svg-tl">Total Monthly Wages</div>
+                </div>
+                <div
+                        class="h-[67px] leading-[67px] font-normal tracking-[.02em] header-content flex flex-nowrap"
+                >
+                    <div class="pl-[23px] w-[310px] border-svg-ftl"></div>
+                    <div class="pl-[29px] w-[398px] border-svg-tl"></div>
+                    <div class="pl-[14px] w-[261.5px] border-svg-tl"></div>
+                    <div class="pl-[20px] w-[433px] border-svg-tl"></div>
+                    <div class="pl-[20px] w-[295px] border-svg-tl"></div>
+                </div>
+            </div>
+        </div>
+        <div class="w-[1716px] -mt-[0.5px]">
+            <div class="h-[85px] flex thead text-[24px] leading-[72px] tracking-[.01em] font-bold">
+                <div class="w-[121px] pl-[30px] border-svg-ftl">SNo.</div>
+                <div class="w-[157px] pl-[21px] tracking-[.01em] border-svg-tl">Is Disable</div>
+                <div class="w-[228px] pl-[3px] border-svg-tl">IP Number</div>
+                <div class="w-[351px] pl-[9px] border-svg-tl">IP Name</div>
+                <div class="w-[134px] pt-[19px] leading-[34px] pl-[10px] border-svg-tl">
+                    No. Of Days
+                </div>
+                <div class="w-[165px] pt-[19px] leading-[34px] px-[25px] border-svg-tl">
+                    Total Wages
+                </div>
+                <div class="w-[191px] pt-[19px] leading-[34px] pr-[26px] pl-[9px] border-svg-tl">
+                    IP
+                    <span class="tracking-[.01em]">Contribution</span>
+                </div>
+                <div class="w-[360px] pl-[19px] border-svg-tl">Reason</div>
+            </div>
+            <div class="flex tbody text-[26px] tracking-[-.02em] flex-col">
+                <div class="tr flex h-[65px] leading-[41px]">
+                    <div class="w-[121px] pl-[16px] border-svg-ftl pt-[24px]">1</div>
+                    <div class="w-[157px] pl-[12px] border-svg-tl pt-[24px]">-</div>
+                    <div class="w-[228px] pl-[3px] border-svg-tl pt-[24px]">2111928923</div>
+                    <div class="w-[351px] pl-[9px] border-svg-tl pt-[24px]">LALITA</div>
+                    <div class="w-[134px] pl-[9px] border-svg-tl pt-[24px]">8</div>
+                    <div class="w-[165px] pl-[8px] border-svg-tl pt-[24px]">3753.29</div>
+                    <div class="w-[191px] pl-[8px] border-svg-tl pt-[24px]">29.00</div>
+                    <div class="w-[360px] pl-[24px] border-svg-tl pt-[24px]">-</div>
+                </div>
+                <div class="tr flex h-[41px] leading-[41px]">
+                    <div class="w-[121px] pl-[16px] border-svg-fl">1</div>
+                    <div class="w-[157px] pl-[12px] border-svg-l">-</div>
+                    <div class="w-[228px] pl-[3px] border-svg-l">2111928923</div>
+                    <div class="w-[351px] pl-[9px] border-svg-l">LALITA adasd awwds dasdsd as</div>
+                    <div class="w-[134px] pl-[9px] border-svg-l">8</div>
+                    <div class="w-[165px] pl-[8px] border-svg-l">3753.29</div>
+                    <div class="w-[191px] pl-[8px] border-svg-l">29.00</div>
+                    <div class="w-[360px] pl-[24px] border-svg-l">-</div>
+                </div>
+
+                <div class="tr flex h-[50px] leading-[52px]">
+                    <div class="w-[121px] pl-[16px] border-svg-fbl">1</div>
+                    <div class="w-[157px] border-l-0 pl-[12px] border-svg-bl">-</div>
+                    <div class="w-[228px] border-l-0 pl-[6px] border-svg-bl">2111928923</div>
+                    <div class="w-[351px] border-l-0 pl-[9px] border-svg-bl">LALITA</div>
+                    <div class="w-[134px] border-l-0 pl-[9px] border-svg-bl">8</div>
+                    <div class="w-[165px] border-l-0 pl-[8px] border-svg-bl">3753.29</div>
+                    <div class="w-[191px] border-l-0 pl-[8px] border-svg-bl">29.00</div>
+                    <div class="w-[360px] border-l-0 pl-[24px] border-svg-bl">-</div>
+                </div>
+            </div>
+        </div>
+        <div class="tfooter w-[1716px] tracking-[.03em] text-[24px] absolute bottom-[192px]">
+            <div class="text-right pr-[83px] h-[83px] leading-[100px]">5:37:04PM</div>
+            <div class="flex justify-between tracking-[.01em]">
+                <div class="pl-[18px]">Page 1 of 42</div>
+                <div class="pr-[83px] w-[378px]">
+							<span class="font-bold inline-block pr-[30px] tracking-[.0em] align-middle">
+								Printed On:
+							</span>
+                    <span class="font-normal">8/19/2022</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="rest-page"></div>
+
+</body>
+</html>
+
