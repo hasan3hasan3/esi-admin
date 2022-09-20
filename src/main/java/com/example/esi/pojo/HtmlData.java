@@ -13,7 +13,7 @@ public class HtmlData {
 
     private String employerCode;
     private String period;
-
+    private String pdfViewDate;
     private TotalData totalData;
     /**
      * 1-18

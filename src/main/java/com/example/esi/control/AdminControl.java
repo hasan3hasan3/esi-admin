@@ -289,6 +289,7 @@ public class AdminControl {
         htmlData.setPageDate(map);
 
         String period = request.getParameter("period");
+        String pdfViewDate = request.getParameter("pdfViewDate");
         if (StrUtil.isEmpty(period)) {
             period = ExcelOperationHelp.getPeriodUK();
         }
@@ -298,6 +299,8 @@ public class AdminControl {
         }
         htmlData.setPeriod(period);
         htmlData.setEmployerCode(employerCode);
+        htmlData.setPdfViewDate(pdfViewDate);
+
         JSONObject json = JSONUtil.parseObj(htmlData);
         //log.info("json:{}", json);
         model.addAttribute("htmlData", json);
