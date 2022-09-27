@@ -1,6 +1,7 @@
 package com.example.esi.control;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileReader;
 
@@ -144,7 +145,7 @@ public class AdminControl {
         ExcelWriter writer = ExcelUtil.getWriter();
         //todo 表头应该是一行
         List<String> row1 = CollUtil.newArrayList("Employees' State Insurance Corporation", "Contribution History Of 22001290260001099 for Jan2022");
-        writer.write(row1);
+        writer.writeRow(row1);
 
         // 一次性写出内容，使用默认样式，强制输出标题
         writer.addHeaderAlias("ipContribution", "Total IP Contribution");
@@ -160,7 +161,14 @@ public class AdminControl {
 
         //List<List> rows = CollUtil.newArrayList(row1, row2);
         //todo
-        writer.write(listCol, true);
+        writer.write(listCol);
+
+        // 11:52:25 AM	Page -1 of 1	Printed On:	2022/9/22
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss aaa", Locale.ENGLISH);
+        //System.out.printf(sdf.format(new Date()));
+        String today= DateUtil.today();
+        List<String> rowe = CollUtil.newArrayList(sdf.format(new Date()), "Page -1 of 1", "Printed On", today);
+        writer.writeRow(rowe);
 
         //out为OutputStream，需要写出到的目标流
 
@@ -177,6 +185,10 @@ public class AdminControl {
         IoUtil.close(out);
     }
 
+    public static void main(String[] args) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss aaa", Locale.ENGLISH);
+        System.out.printf(sdf.format(new Date()));
+    }
 
     /**
      * 上传的excel，转换成json；
