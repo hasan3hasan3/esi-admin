@@ -21,10 +21,10 @@ public class Contribution {
     private String insuranceNumber;
     private String insuredPerson;
     private String noofDaysWorked;
-    @Column(scale = 0)
-    private Double totalMonthlyWages;
-    @Column(scale = 0)
-    private Double ipContribution;
+    //@Column(scale = 2)    private Double totalMonthlyWages;
+    //@Column(scale = 2)    private Double ipContribution;
+    @Column(scale = 2)    private String totalMonthlyWages;
+    @Column(scale = 2)    private String ipContribution;
     private String reason;
 
     @ManyToOne(cascade = CascadeType.ALL)

@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface ContributionRepository extends JpaRepository<Contribution, Long> {
 
     Page<Contribution> findByHistoryTotal(HistoryTotal historyTotal, Pageable pageable);
+
+
 }

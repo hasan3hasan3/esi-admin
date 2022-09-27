@@ -1,11 +1,15 @@
 package com.example.esi.control;
 
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.example.esi.entity.HistoryTotal;
+import com.example.esi.entity.PdfJson;
 import com.example.esi.pojo.ViewContributionHistoryData;
+import com.example.esi.repository.PdfJsonRepository;
 import com.example.esi.service.ViewContributionHistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +26,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -66,7 +71,7 @@ public class ContributionControl {
     public String getEsihistoryTotalRepository(String employerCode, String period) {
         HistoryTotal historyTotal = viewContributionHistoryService.findByPeriodAndEmployerCode(period, employerCode);
 
-        log.info("{}", historyTotal);
+        //log.info("{}", historyTotal);
         if (historyTotal != null) {
             return "fail";
         }
@@ -79,7 +84,8 @@ public class ContributionControl {
     }
 
     /**
-     *  最新上传的5条
+     * 最新上传的5条
+     *
      * @return
      */
     @GetMapping("/findNewUpload")
@@ -100,6 +106,12 @@ public class ContributionControl {
 
     @Value("${file.uploadFolder}")
     private String uploadFolder;
+    PdfJsonRepository pdfJsonRepository;
+
+    @Autowired
+    public void setPdfJsonRepository(PdfJsonRepository pdfJsonRepository) {
+        this.pdfJsonRepository = pdfJsonRepository;
+    }
 
     private void uploadFile(MultipartFile file, String id) {
 
@@ -110,7 +122,16 @@ public class ContributionControl {
             if (copySize > 0 && !StrUtil.isEmpty(id)) {
                 HistoryTotal historyTotal = viewContributionHistoryService.getHistoryTotal(Long.parseLong(id));
                 historyTotal.setEsiPdfName(filename);
+                //todo
+                //这里上传pdf 的时候，自动产生excel的名字，在本地c:\\esixls中创建相同名字的xls
+                Date date = DateUtil.date();
+                String format = DateUtil.format(date, "ssmmHHddMMyyyy");
+                historyTotal.setEsiExcelName(format + ".xls");
                 viewContributionHistoryService.saveHistoryTotal(historyTotal);
+
+                PdfJson pdfJson = pdfJsonRepository.findById(Long.parseLong(id)).get();
+                pdfJson.setPdfName(filename);
+                pdfJsonRepository.save(pdfJson);
             }
             //log.info("copySize:{}", copySize);
         } catch (IOException e) {
@@ -118,5 +139,9 @@ public class ContributionControl {
         }
     }
 
-
+    public static void main(String[] args) {
+        Date date = DateUtil.date();
+        String format = DateUtil.format(date, "ssmmHHddMMyyyy");
+        System.out.println(format);
+    }
 }

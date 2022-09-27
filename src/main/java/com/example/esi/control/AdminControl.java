@@ -12,15 +12,11 @@ import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 
-import com.example.esi.entity.Challan;
-import com.example.esi.entity.Contribution;
-import com.example.esi.entity.HistoryTotal;
-import com.example.esi.entity.TransactionDetails;
+import com.example.esi.entity.*;
 import com.example.esi.pojo.HtmlData;
 import com.example.esi.pojo.PageDate;
 import com.example.esi.pojo.TotalData;
-import com.example.esi.repository.ChallanRepository;
-import com.example.esi.repository.HistoryTotalRepository;
+import com.example.esi.service.ViewContributionHistoryService;
 import com.example.esi.util.ExcelOperationHelp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,19 +38,13 @@ import java.util.*;
 @Controller
 public class AdminControl {
     static Logger log = LoggerFactory.getLogger(AdminControl.class);
-    HistoryTotalRepository historyTotalRepository;
-    ChallanRepository challanRepository;
+
+    ViewContributionHistoryService viewContributionHistoryService;
 
     @Autowired
-    public void setHistoryTotalRepository(HistoryTotalRepository historyTotalRepository) {
-        this.historyTotalRepository = historyTotalRepository;
+    public void setViewContributionHistoryService(ViewContributionHistoryService viewContributionHistoryService) {
+        this.viewContributionHistoryService = viewContributionHistoryService;
     }
-
-    @Autowired
-    public void setChallanRepository(ChallanRepository challanRepository) {
-        this.challanRepository = challanRepository;
-    }
-
 
     @RequestMapping("")
     public String index() {
@@ -126,8 +116,8 @@ public class AdminControl {
             //  total wage
             Double d2 = Double.valueOf(String.valueOf(obj2));
             Double d4 = ExcelOperationHelp.getRoundup(d2 * 0.0075, 0);
-            String d2format = NumberUtil.decimalFormat("0", d2);
-            String d4format = NumberUtil.decimalFormat("0", d4);
+            String d2format = NumberUtil.decimalFormat("0.00", d2);
+            String d4format = NumberUtil.decimalFormat("0.00", d4);
 
 
             //employerContribution += d2 * 0.0325;
@@ -187,6 +177,7 @@ public class AdminControl {
         IoUtil.close(out);
     }
 
+
     /**
      * 上传的excel，转换成json；
      * 提供给html，待转换-pdf；
@@ -217,7 +208,7 @@ public class AdminControl {
 
             Object obj0 = list.get(0);
             Object obj1 = list.get(1);
-            String str1 = String.valueOf(obj1);
+            String str1 = String.valueOf(obj1).trim();
 
             Object obj2 = list.get(2);
             Object obj3 = list.get(3);
@@ -226,8 +217,8 @@ public class AdminControl {
             Double d2 = Double.valueOf(String.valueOf(obj2));
             Double d4 = ExcelOperationHelp.getRoundup(d2 * 0.0075, 0);
 
-            String d2format = NumberUtil.decimalFormat("0", d2);
-            String d4format = NumberUtil.decimalFormat("0", d4);
+            String d2format = NumberUtil.decimalFormat("0.00", d2);
+            String d4format = NumberUtil.decimalFormat("0.00", d4);
 
 
             PageDate pageDate = new PageDate();
@@ -236,10 +227,11 @@ public class AdminControl {
             pageDate.setNumber(String.valueOf(obj0));
             if (str1.length() >= maxStrLen) {
                 str1 = ExcelOperationHelp.strTr2S(str1);
-                line = line - 1;
-                pageDate.setName(str1);
+                //line = line - 1;
+                rowCount = rowCount + 2;
+                pageDate.setName(str1.trim());
             } else {
-                pageDate.setName(String.valueOf(obj1).toUpperCase());
+                pageDate.setName(String.valueOf(obj1).toUpperCase().trim());
             }
             pageDate.setDays(String.valueOf(obj3));
             pageDate.setWages(d2format);
@@ -268,7 +260,7 @@ public class AdminControl {
                 pageDateList = new ArrayList<>();
                 page = page + 1;
                 rowCount = 0;
-                line = 29;
+                //line = 29;
                 //todo add line =29,每页从29行开始，待测试
             }
         }
@@ -302,91 +294,22 @@ public class AdminControl {
         htmlData.setPdfViewDate(pdfViewDate);
 
         JSONObject json = JSONUtil.parseObj(htmlData);
+        String jsonStr = JSONUtil.toJsonPrettyStr(htmlData);
+        model.addAttribute("htmlData", jsonStr);
         //log.info("json:{}", json);
-        model.addAttribute("htmlData", json);
-        //xls(htmlData,response);
-
-
         //todo
-
         HistoryTotal historyTotal = new HistoryTotal();
         historyTotal.setTotalIpContribution(NumberUtil.decimalFormat("0.00", ipContribution));
         historyTotal.setTotalEmployerContribution(NumberUtil.decimalFormat("0.00", NumberUtil.round(employerContribution, 0).doubleValue()));
         historyTotal.setTotalContribution(NumberUtil.decimalFormat("0.00", contribution));
         historyTotal.setTotalMonthlywages(NumberUtil.decimalFormat("0.00", monthlyWages));
         historyTotal.setTotalGovernmentContribution("0.00");
-        excel2db(historyTotal, map, period, employerCode);
+
+        viewContributionHistoryService.excel2db(jsonStr, historyTotal, map, period, pdfViewDate, employerCode);
         //组装新的实体对象，保存到数据库。
-        return "json";
+
+        return "pdf";
     }
 
 
-    /**
-     * 通过上传的excel文件，保存到数据库（按每月一份）；
-     *
-     * @param
-     * @param
-     * @param period
-     * @return
-     */
-    //todo
-    public HistoryTotal excel2db(HistoryTotal historyTotal, Map map, String period, String employerCode) {
-
-
-        //HistoryTotal historyTotal = new HistoryTotal();
-
-        historyTotal.setPeriod(period);
-        historyTotal.setEmployerCode(employerCode);
-
-
-        List<Contribution> contributionList = new ArrayList<Contribution>();
-
-        //map 中取出所有list。 再组装entity
-        for (Object key : map.keySet()) {
-            for (PageDate pageDate : (List<PageDate>) map.get(key)) {
-                Contribution contribution = new Contribution();
-                //Contribution.setDip("-");
-
-                contribution.setInsuranceNumber(pageDate.getNumber());
-                contribution.setInsuredPerson(pageDate.getName());
-                contribution.setNoofDaysWorked(pageDate.getDays());
-                contribution.setTotalMonthlyWages(Double.valueOf(pageDate.getWages()));
-                contribution.setIpContribution(Double.valueOf(pageDate.getContribution()));
-                contribution.setHistoryTotal(historyTotal);
-                contributionList.add(contribution);
-
-            }
-        }
-        historyTotal.setContribution(contributionList);
-
-        //log.info("{},{}", historyTotal, historyTotal.getTotalContribution());
-        historyTotalRepository.save(historyTotal);
-
-        Challan challan = new Challan();
-        challan.setPeriod(historyTotal.getPeriod());
-        challan.setEmployerCode(historyTotal.getEmployerCode());
-        String challanNo2Number = ExcelOperationHelp.getChallanNo();
-        challan.setChallanNo(challanNo2Number);
-
-        TransactionDetails transactionDetails = new TransactionDetails();
-        //transactionDetails.setChallan(challan);
-        transactionDetails.setEmployersCodeNo(historyTotal.getEmployerCode());
-        transactionDetails.setChallanNumber(challanNo2Number);
-        transactionDetails.setTransactionNumber(ExcelOperationHelp.getTransactionNumber());
-
-        challan.setTransactionDetails(transactionDetails);
-
-        challanRepository.save(challan);
-        //ExcelUtil.readBySax(file.getInputStream(), 0, createRowHandler());
-        return historyTotal;
-    }
-
-    //private static RowHandler createRowHandler() {
-    //    return new RowHandler() {
-    //        @Override
-    //        public void handle(int sheetIndex, long rowIndex, List<Object> rowlist) {
-    //            Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist);
-    //        }
-    //    };
-    //}
 }

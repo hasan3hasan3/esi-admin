@@ -45,6 +45,7 @@ public class ExcelOperationHelp {
         return str_s.toUpperCase();
     }
 
+
     /**
      * #,##,###.00
      *
@@ -100,18 +101,21 @@ public class ExcelOperationHelp {
     }
 
     public static void main(String[] args) {
-        String s = ExcelOperationHelp.lakhFormattedComma(ExcelOperationHelp.getRoundup(8.9, 0));
-        //System.out.printf(s);
-        String d4format = NumberUtil.decimalFormat("0", 1.0);
-        //System.out.printf(d4format);
-        double d =  6407.99 * 0.0325;
-        double employerContribution = ExcelOperationHelp.getRoundup(d, 0);
-        String employerContributionS = ExcelOperationHelp.lakhFormattedComma(employerContribution);
-        //System.out.printf("" + employerContribution
+        //String s = ExcelOperationHelp.lakhFormattedComma(ExcelOperationHelp.getRoundup(8.9, 0));
+        ////System.out.printf(s);
+        //String d4format = NumberUtil.decimalFormat("0", 1.0);
+        ////System.out.printf(d4format);
+        //double d =  6407.99 * 0.0325;
+        //double employerContribution = ExcelOperationHelp.getRoundup(d, 0);
+        //String employerContributionS = ExcelOperationHelp.lakhFormattedComma(employerContribution);
+        ////System.out.printf("" + employerContribution
+        //
+        //
+        //System.out.println(""+employerContribution);
+        //System.out.println(employerContributionS);
 
+        System.out.println(strTr2S("KOWSALYA KALIYAMOORTHY ").trim());
 
-        System.out.println(""+employerContribution);
-        System.out.println(employerContributionS);
 
     }
 

@@ -9,27 +9,51 @@
     <title>ESIC_admin</title>
 </head>
 <body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">ESIC</a>
+            <ul class="nav navbar-nav">
+                <li class="active" role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
+                <li role="presentation"><a
+                        href="/op2contribution"><strong>operation-contribution</strong></a></li>
+                <li role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>
+                <li role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
+                <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
+                <!--            <li role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>-->
+            </ul>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-text"><small>admin:<span th:text="${session.userName}"></span></small></li>
+            <li class="navbar-text"><small id="current-time"></small></li>
+
+        </ul>
+        <!-- Brand and toggle get grouped for better mobile display -->
+    </div>
+</nav>
 <div class="container-fluid">
-    <div class="page-header">
-        <h3>
-            ESIC &nbsp;&nbsp;<small>admin:<span th:text="${session.userName}"></span>&nbsp;</small>
-            <small id="current-time"></small>
-        </h3>
+<!--    <h3>-->
+<!--        ESIC &nbsp;&nbsp;<small>admin:<span th:text="${session.userName}"></span>&nbsp;</small>-->
+<!--        <small id="current-time"></small>-->
+<!--    </h3>-->
+<!--    <div class="page-header">-->
+
         <!--        <ul class="nav nav-pills">-->
         <!--            <li role="presentation"><a href="/ModifyChallan">Modify Challan</a></li>-->
         <!--            <li role="presentation"><a href="/ViewContributionHistory">ViewContributionHistory</a></li>-->
         <!--            <li role="presentation"><a href="/OnlineChallanDoubleverification">OnlineChallan Doubleverification</a></li>-->
         <!--        </ul>-->
-        <ul class="nav nav-pills">
-            <li class="active" role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
-            <li role="presentation"><a href="/op2contribution"><strong>operation-contribution</strong></a></li>
-            <li role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>
-            <li role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
-            <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
-            <!--            <li role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>-->
+<!--        <ul class="nav nav-pills">-->
+<!--            <li class="active" role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>-->
+<!--            <li role="presentation"><a href="/op2contribution"><strong>operation-contribution</strong></a></li>-->
+<!--            <li role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>-->
+<!--            <li role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>-->
+<!--            <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>-->
+<!--            &lt;!&ndash;            <li role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>&ndash;&gt;-->
 
-        </ul>
-    </div>
+<!--        </ul>-->
+<!--    </div>-->
     <div class="row">
         <div class="col-md-12">
             <ol class="breadcrumb">

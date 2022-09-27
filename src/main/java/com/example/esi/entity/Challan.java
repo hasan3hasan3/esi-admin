@@ -22,7 +22,8 @@ public class Challan {
     private String challanDate;//14/01/2022
     private String realizedDate;//17/01/2022
     private String depositedDate;//17/01/2022
-    private Double amount;//67540
+    @Column(scale = 0)
+    private String amount;//67540
     private String challanType;//Contribution
 
     @OneToOne(cascade = CascadeType.ALL)

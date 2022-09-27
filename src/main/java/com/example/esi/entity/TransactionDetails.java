@@ -24,7 +24,8 @@ public class TransactionDetails {
     private String challanNumber;           // :02222102596926
     private String challanCreatedDate;      //	14-01-2022 21:36:19
     private String challanSubmittedDate;    //	17-01-2022 11:49:28
-    private Double amountPaid;              //:	67540.00
+    @Column(scale = 2)
+    private String amountPaid;              //:	67540.00
 
     private String transactionNumber;       //:	73763195
 

@@ -1,14 +1,17 @@
 package com.example.esi.control;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.example.esi.entity.Challan;
 import com.example.esi.entity.HistoryTotal;
+import com.example.esi.entity.PdfJson;
 import com.example.esi.entity.TransactionDetails;
 import com.example.esi.pojo.ViewContributionHistoryData;
 import com.example.esi.repository.ChallanRepository;
 import com.example.esi.repository.HistoryTotalRepository;
+import com.example.esi.repository.PdfJsonRepository;
 import com.example.esi.repository.TransactionDetailsRepository;
 import com.example.esi.service.ViewContributionHistoryService;
 import org.slf4j.Logger;
@@ -16,27 +19,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 @Controller
 public class ApiControl {
     static Logger log = LoggerFactory.getLogger(ApiControl.class);
 
-    public static void main(String[] args) {
-        //Last Logged In Tuesday, September 06, 2022 at 12:37 PM
-        SimpleDateFormat sdf = new SimpleDateFormat("'Last Logged In' EEEE, MMMM dd, yyyy 'at' HH:mm aaa", Locale.ENGLISH);
-         //log.info("{}", sdf.format(new Date()));
-
-         //log.info("{}", "06722117347790".length());
-    }
 
     @RequestMapping("/esi-login")
     @ResponseBody
@@ -49,7 +48,7 @@ public class ApiControl {
         HttpSession mySession = request.getSession();
         //Last Logged In Tuesday, September 06, 2022 at 12:37 PM
         SimpleDateFormat sdf = new SimpleDateFormat("'Last Logged In' EEEE, MMMM dd, yyyy 'at' HH:mm aaa", Locale.ENGLISH);
-         //log.info("{}", sdf.format(new Date()));
+        //log.info("{}", sdf.format(new Date()));
         mySession.setAttribute("epfoNow", sdf.format(new Date()));
         if (user.indexOf("67") > -1) {
             user = "67000909350001099";
@@ -138,12 +137,52 @@ public class ApiControl {
                                                   @RequestParam(value = "employerCode", required = true, defaultValue = "67000909350001099") String employerCode,
                                                   @RequestParam(value = "challanNo", required = true, defaultValue = "06722119367501") String challanNo) {
 
-         //log.info("getOnlineChallanStatus1111{}, {}", challanNo, employerCode);
+        //log.info("getOnlineChallanStatus1111{}, {}", challanNo, employerCode);
 
         TransactionDetails transactionDetails = transactionDetailsRepository.findByChallanNumberAndEmployersCodeNo(challanNo, employerCode);
-         //log.info("getOnlineChallanStatus{},{},{}", transactionDetails, challanNo, employerCode);
+        //log.info("getOnlineChallanStatus{},{},{}", transactionDetails, challanNo, employerCode);
 
         return transactionDetails;
     }
+
+
+    PdfJsonRepository pdfJsonRepository;
+
+    @Autowired
+    public void setPdfJsonRepository(PdfJsonRepository pdfJsonRepository) {
+        this.pdfJsonRepository = pdfJsonRepository;
+    }
+
+    @RequestMapping("/show/{filename}")
+    public String downPdfbyFileName(Model model, @PathVariable("filename") String filename) {
+        log.info("in downPdf -----s{}", filename);
+        PdfJson pdfJson = pdfJsonRepository.findByPdfName(filename);
+        JSONObject json = JSONUtil.parseObj(pdfJson.getJson());
+
+        model.addAttribute("htmlData", json);
+        //Date date = DateUtil.date();
+        //String formatd = DateUtil.format(date, "dd/MM/yyyy");
+        //SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ssaaa", Locale.ENGLISH);
+        //model.addAttribute("utime", sdf.format(new Date()));
+        //model.addAttribute("udate", formatd);
+
+        return "pdf";
+    }
+
+    //@RequestMapping("/show2/{id}")
+    //public String downPdfByid(Model model, @PathVariable("id") Long id) {
+    //    log.info("in downPdf -----s{}", id);
+    //    PdfJson pdfJson = pdfJsonRepository.findById(id).get();
+    //    JSONObject json = JSONUtil.parseObj(pdfJson.getJson());
+    //
+    //    model.addAttribute("htmlData", json);
+    //    //Date date = DateUtil.date();
+    //    //String formatd = DateUtil.format(date, "dd/MM/yyyy");
+    //    //SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ssaaa", Locale.ENGLISH);
+    //    //model.addAttribute("utime", sdf.format(new Date()));
+    //    //model.addAttribute("udate", formatd);
+    //
+    //    return "pdf";
+    //}
 
 }

@@ -9,32 +9,29 @@
     <title>ESIC_admin</title>
 </head>
 <body>
-<div class="container-fluid">
-    <div class="page-header">
-        <h3>
-            ESIC &nbsp;&nbsp;<small>admin:<span th:text="${session.userName}"></span>&nbsp;</small>
-            <small id="current-time"></small>
-        </h3>
-        <!-- <ul class="nav nav-pills">
-             <li role="presentation"><a href="/ModifyChallan">Modify Challan</a></li>
-             <li role="presentation"><a href="/ViewContributionHistory">ViewContributionHistory</a></li>
-             <li role="presentation"><a href="/OnlineChallanDoubleverification">OnlineChallan Doubleverification</a></li>
-         </ul> -->
-         <ul class="nav nav-pills">
-             <li role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
-             <li role="presentation"><a href="/op2contribution"><strong>operation-contribution</strong></a></li>
-             <li role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
-             <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
-             <!--
-             <li class="active" role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>
-             -->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">ESIC</a>
+            <ul class="nav navbar-nav">
+                <li class="active" role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
+                <li role="presentation"><a href="/op2contribution"><strong>operation-contribution</strong></a></li>
+                <li role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>
+                <li role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
+                <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
+            </ul>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-text"><small>admin:<span th:text="${session.userName}"></span></small></li>
+            <li class="navbar-text"><small id="current-time"></small></li>
         </ul>
     </div>
+</nav>
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
 
             <form action="/saveChallan" class="form-horizontal" enctype="multipart/form-data" method="post">
-
                 <div class="panel panel-default">
                     <div class="panel-heading">Modify Challan</div>
                     <div class="panel-body">
@@ -67,7 +64,7 @@
                             <label for="challanDate">Challan Date.</label>
                             <input class="form-control input-sm" id="challanDate" name="challanDate"
                                    th:value="${challan.getChallanDate()}"
-                                   onclick="WdatePicker({dateFmt:'dd/MM/yyyy'})"
+                                   onclick="WdatePicker({dateFmt:'dd/MMM/yyyy'})"
                                    type="text"/>
                         </div>
 
@@ -75,14 +72,14 @@
                             <label for="realizedDate">Realized Date.</label>
                             <input class="form-control input-sm" id="realizedDate" name="realizedDate"
                                    th:value="${challan.getRealizedDate()}"
-                                   onclick="WdatePicker({dateFmt:'dd/MM/yyyy'})"
+                                   onclick="WdatePicker({dateFmt:'dd/MMM/yyyy'})"
                                    type="text"/>
                         </div>
                         <div class="col-sm-4">
                             <label for="depositedDate">Deposited Date.</label>
                             <input class="form-control input-sm" id="depositedDate" name="depositedDate"
                                    th:value="${challan.getDepositedDate()}"
-                                   onclick="WdatePicker({dateFmt:'dd/MM/yyyy'})"
+                                   onclick="WdatePicker({dateFmt:'dd/MMM/yyyy'})"
                                    type="text"/>
                         </div>
                         <div class="col-sm-4">
@@ -96,14 +93,10 @@
                                    value="Contribution" type="text"></input>
                         </div>
                     </div>
-
                 </div>
-
                 <div class="panel panel-info">
-                    <!-- Default panel contents -->
                     <div class="panel-heading">Transaction Details</div>
                     <div class="panel-body">
-
                         <div class="col-sm-4">
                             <label for="transactionStatus">Transaction status:</label>
                             <input class="form-control input-sm" id="transactionStatus" name="transactionStatus"
@@ -125,7 +118,8 @@
                         <div class="col-sm-4">
                             <label for="challanPeriod">Challan Period: </label>
                             <input class="form-control input-sm" id="challanPeriod" name="challanPeriod"
-                                   onclick="WdatePicker({dateFmt:'MMM-yyyy'})" th:value="${challan.getTransactionDetails().getChallanPeriod()}"
+                                   onclick="WdatePicker({dateFmt:'MMM-yyyy'})"
+                                   th:value="${challan.getTransactionDetails().getChallanPeriod()}"
                                    type="text"></input>
                         </div>
                         <div class="col-sm-4">
@@ -138,15 +132,14 @@
                             <label for="challanCreatedDate">Challan Created Date:</label>
                             <input class="form-control input-sm" id="challanCreatedDate" name="challanCreatedDate"
                                    th:value="${challan.getTransactionDetails().getChallanCreatedDate()}"
-                                   onclick="WdatePicker({dateFmt:'dd-MM-yyyy HH:mm:ss'})"
+                                   onclick="WdatePicker({dateFmt:'dd-MMM-yyyy HH:mm:ss'})"
                                    type="text"/>
                         </div>
                         <div class="col-sm-4">
                             <label for="challanSubmittedDate">Challan Submitted Date:</label>
-
                             <input class="form-control input-sm" id="challanSubmittedDate" name="challanSubmittedDate"
                                    th:value="${challan.getTransactionDetails().getChallanSubmittedDate()}"
-                                   onclick="WdatePicker({dateFmt:'dd-MM-yyyy HH:mm:ss'})"
+                                   onclick="WdatePicker({dateFmt:'dd-MMM-yyyy HH:mm:ss'})"
                                    type="text"/>
                         </div>
                         <div class="col-sm-4">
@@ -162,7 +155,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-sm-12">
                     <input class="form-control input-sm" id="challan.id" name="id"
                            th:value="${challan.getId()}"
@@ -178,7 +170,6 @@
             </form>
         </div>
         <p class="lead">&nbsp;
-
         </p>
     </div>
 </div>
@@ -187,9 +178,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         //location.href = "#view";
-
         currentTime();
-
     });
 
     function currentTime() {

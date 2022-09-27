@@ -21,6 +21,7 @@ public class HistoryTotal {
     private String employerCode;
 
     private String period;
+    private String pdfViewDate;
 
     @Column(scale = 2)
     private String totalIpContribution;
@@ -35,9 +36,13 @@ public class HistoryTotal {
 
 
     private String esiPdfName;
+    private String esiExcelName;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Contribution> contribution;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private PdfJson pdfJson;
 }

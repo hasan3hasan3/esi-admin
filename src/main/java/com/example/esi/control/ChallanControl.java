@@ -96,6 +96,7 @@ public class ChallanControl {
         if (challan != null && transactionDetails != null) {
             //transactionDetails.setChallan(challan);
             challan.setTransactionDetails(transactionDetails);
+            //log.info(transactionDetails.getAmountPaid());
             challanRepository.save(challan);
         }
 

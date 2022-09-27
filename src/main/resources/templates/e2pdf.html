@@ -9,29 +9,52 @@
     <title>ESI_index</title>
 </head>
 <body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">ESIC</a>
+            <ul class="nav navbar-nav">
+                <li role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
+                <li role="presentation"><a
+                        href="/op2contribution"><strong>operation-contribution</strong></a></li>
+                <li role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>
+                <li class="active" role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
+                <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
+                <!--            <li role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>-->
+            </ul>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-text"><small>admin:<span th:text="${session.userName}"></span></small></li>
+            <li class="navbar-text"><small id="current-time"></small></li>
+
+        </ul>
+        <!-- Brand and toggle get grouped for better mobile display -->
+    </div>
+</nav>
 <div class="container-fluid">
-    <div class="page-header">
-        <h3>
-            ESIC &nbsp;&nbsp;<small>admin:<span th:text="${session.userName}"></span>&nbsp;</small>
-            <small id="current-time"></small>
-        </h3>
+<!--    <h3>-->
+<!--        ESIC &nbsp;&nbsp;<small>admin:<span th:text="${session.userName}"></span>&nbsp;</small>-->
+<!--        <small id="current-time"></small>-->
+<!--    </h3>-->
+<!--    <div class="page-header">-->
+
         <!---->
         <!--        <ul class="nav nav-pills">-->
         <!--            <li role="presentation"><a href="/ModifyChallan">Modify Challan</a></li>-->
         <!--            <li role="presentation"><a href="/ViewContributionHistory">ViewContributionHistory</a></li>-->
         <!--            <li role="presentation"><a href="/OnlineChallanDoubleverification">OnlineChallan Doubleverification</a></li>-->
         <!--        </ul>-->
-        <ul class="nav nav-pills">
+<!--        <ul class="nav nav-pills">-->
 
-            <li role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
-            <li role="presentation"><a href="/op2contribution"><strong>operation-contribution</strong></a></li>
-            <li role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>
-            <li class="active" role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
-            <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
-            <!--            <li role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>-->
+<!--            <li role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>-->
+<!--            <li role="presentation"><a href="/op2contribution"><strong>operation-contribution</strong></a></li>-->
+<!--            <li role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>-->
+<!--            <li class="active" role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>-->
+<!--            <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>-->
+<!--            &lt;!&ndash;            <li role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>&ndash;&gt;-->
 
-        </ul>
-    </div>
+<!--        </ul>-->
+<!--    </div>-->
     <div class="row">
         <div class="col-md-12">
             <form action="/excel2pdf" class="form-horizontal" enctype="multipart/form-data" method="post"
@@ -50,7 +73,14 @@
                         <div class="col-sm-4">
                             <label for="mmyyyy">Period：</label>
                             <input class="form-control input-sm" id="mmyyyy" name="period"
-                                   onclick="WdatePicker({dateFmt:'yyyyMMM'})" required
+                                   onclick="WdatePicker({dateFmt:'yyyyMMM'})" onblur="pickedFunc()" required
+                                   type="text"/>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label for="mmyyyy">pdfViewDate：</label>
+                            <input class="form-control input-sm" id="pdfViewDate" name="pdfViewDate"
+                                   onclick="WdatePicker({dateFmt:'MMMyyyy'})" required
                                    type="text"/>
                         </div>
                     </div>
@@ -60,12 +90,6 @@
                     <div class="panel-body">
                         <div class="form-group">
 
-                            <div class="col-sm-4">
-                                <label for="mmyyyy">pdfViewDate：</label>
-                                <input class="form-control input-sm" id="pdfViewDate" name="pdfViewDate"
-                                       onclick="WdatePicker({dateFmt:'yyyyMMM'})" required
-                                       type="text"/>
-                            </div>
                             <div class="col-sm-12">
                                 <label for="excel_upload_txt">Choose excel to upload</label>
                                 <input accept=".xls,.xlsx" id="excel_upload_txt" name="file" required
@@ -88,12 +112,15 @@
 </html>
 <script type="text/javascript">
     $(document).ready(function () {
+        $("form").submit(function(){
+            $("#Submit").attr("disabled", "disabled");
+        });
         $("#Check").click(function () {
             var employerCodeV = $("#employerCode").val();
             var periodV = $("#mmyyyy").val();
             //alert(periodV);
             //console.log(periodV,employerCodeV)
-            if(periodV==''||employerCodeV==''){
+            if (periodV == '' || employerCodeV == '') {
                 alert('Select Criteria!');
                 return false;
             }
@@ -106,11 +133,11 @@
                 },
                 success: function (res) { // 请求成功之后的回调函数
                     console.log(res)
-                    if(res=='fail'){
-                        $("#Submit").attr("disabled","disabled");
+                    if (res == 'fail') {
+                        $("#Submit").attr("disabled", "disabled");
                         alert('Data Already exists!');
                     }
-                    if(res=='success'){
+                    if (res == 'success') {
                         $("#Submit").removeAttr("disabled");//去除input元素的disabled属性
                     }
                 }
@@ -118,4 +145,27 @@
         });/**/
 
     });
+
+
+    function pickedFunc() {
+        var periodV = $("#mmyyyy").val();
+        let yyyy = periodV.substring(0, 4);
+        let mmm = periodV.substring(4, 7);
+        var monthArr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var upyyyy = yyyy;
+        var upmmm = mmm;
+        if(mmm=='Jan'){
+            upyyyy = yyyy-1;
+            upmmm = "Dec";
+        }else{
+            for (var i = 0; i < monthArr.length; i++) {
+                if (monthArr[i] == mmm) {
+                    upmmm = monthArr[i-1];
+                }
+            }
+        }
+        // console.log(mmm, yyyy)
+        // console.log(upyyyy, upmmm)
+        $("#pdfViewDate").val(upmmm+''+upyyyy);
+    }
 </script>

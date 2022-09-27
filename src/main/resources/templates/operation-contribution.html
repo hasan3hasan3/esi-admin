@@ -9,29 +9,40 @@
     <title>ESIC_admin</title>
 </head>
 <body>
-<div class="container-fluid">
-    <div class="page-header">
-        <h3>
-            ESIC &nbsp;&nbsp;<small>admin:<span th:text="${session.userName}"></span></small>
-            <small id="current-time"></small>
-        </h3>
-        <!--
-         <ul class="nav nav-pills">
-             <li role="presentation"><a href="/ModifyChallan">Modify Challan</a></li>
-             <li role="presentation"><a href="/ViewContributionHistory">ViewContributionHistory</a></li>
-             <li role="presentation"><a href="/OnlineChallanDoubleverification">OnlineChallan Doubleverification</a></li>
-         </ul>-->
-        <ul class="nav nav-pills">
-            <li role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
-            <li class="active" role="presentation"><a
-                    href="/op2contribution"><strong>operation-contribution</strong></a></li>
-            <li role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>
-            <li role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
-            <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
-            <!--            <li role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>-->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">ESIC</a>
+            <ul class="nav navbar-nav">
+                <li role="presentation"><a href="/op2challan"><strong>operation-chall</strong></a></li>
+                <li class="active" role="presentation"><a
+                        href="/op2contribution"><strong>operation-contribution</strong></a></li>
+                <li role="presentation"><a href="/viewpdf"><strong>view-Pdf</strong></a></li>
+                <li role="presentation"><a href="/e2pdf"><strong>upload-e2esiPdf</strong></a></li>
+                <li role="presentation"><a href="/e2xsl"><strong>upload-e2esiXsl</strong></a></li>
+                <!--            <li role="presentation"><a href="/s2challan"><strong>save-challan</strong></a></li>-->
+            </ul>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-text"><small>admin:<span th:text="${session.userName}"></span></small></li>
+            <li class="navbar-text"><small id="current-time"></small></li>
 
         </ul>
+        <!-- Brand and toggle get grouped for better mobile display -->
     </div>
+</nav>
+<div class="container-fluid">
+    <!--    <h3>-->
+    <!--        ESIC &nbsp;&nbsp;<small>admin:<span th:text="${session.userName}"></span></small>-->
+    <!--        <small id="current-time"></small>-->
+    <!--    </h3>-->
+    <!-- <div class="page-header">-->
+    <!--    <ul class="nav nav-pills">-->
+    <!--        <li role="presentation"><a href="/ModifyChallan">Modify Challan</a></li>-->
+    <!--        <li role="presentation"><a href="/ViewContributionHistory">ViewContributionHistory</a></li>-->
+    <!--        <li role="presentation"><a href="/OnlineChallanDoubleverification">OnlineChallan Doubleverification</a></li>-->
+    <!--    </ul>-->
+    <!-- </div>-->
     <div class="row">
         <div class="col-md-12">
             <ol class="breadcrumb">
@@ -75,6 +86,11 @@
                                             th:onclick="upload_esiPdf([[${period}]],[[${employerCode}]])">uploadEsiPdf
                                     </button>
                                 </th>
+<!--                                <th class="text-center">-->
+<!--                                    <button type="button" class="btn btn-primary"-->
+<!--                                            th:onclick="uploadEsiExcel([[${period}]],[[${employerCode}]])">uploadEsiExcel-->
+<!--                                    </button>-->
+<!--                                </th>-->
                                 <th class="text-center">
                                     <button type="button" class="btn btn-danger"
                                             th:onclick="del()">delete
@@ -91,11 +107,13 @@
                             0%
                         </div>
                     </div>
+                    <div class="table-responsive">
                     <table class="table table-condensed table-hover table-bordered table-striped">
                         <thead>
                         <tr>
                             <th>#id</th>
-                            <th>#EsiPdfName</th>
+                            <th>EsiPdfName</th>
+                            <th>EsiExcelName</th>
                             <th>TotalIpContribution</th>
                             <th>TotalEmployerContribution</th>
                             <th>TotalContribution</th>
@@ -107,9 +125,14 @@
                             <td>
                                 <button type="button" class="btn btn-link"
                                         th:onclick="printEsiPdf([[${dataH.getEsiPdfName()}]])">
-                                    <span th:text="${dataH.getEsiPdfName()}"></span>
+                                    <span class="text-success" th:text="${dataH.getEsiPdfName()}"></span>
+                                </button>
+                                <button type="button" class="btn btn-link"
+                                        th:onclick="restructureEsiPdf([[${dataH.getEsiPdfName()}]])">
+                                    <span class="text-primary">restructure-pdf-test</span>
                                 </button>
                             </td>
+                            <td th:text="${dataH.getEsiExcelName()}"></td>
                             <td th:text="${dataH.getTotalIpContribution()}"></td>
                             <td th:text="${dataH.getTotalEmployerContribution()}"></td>
                             <td th:text="${dataH.getTotalContribution()}"></td>
@@ -118,6 +141,8 @@
                         </tr>
                         </thead>
                     </table>
+                    </div>
+
                     <table class="table table-condensed table-hover table-bordered table-striped">
                         <thead>
                         <tr>
@@ -136,13 +161,13 @@
                         <tr th:each="data,dataStat:${data.getContent()}">
                             <td th:text="${data.id}"></td>
                             <td th:text="${dataStat.index+1}"></td>
-                            <td th:text="${data.dip}">-</td>
+                            <td><p class="text-danger">-</p></td>
                             <td th:text="${data.insuranceNumber}"></td>
                             <td th:text="${data.insuredPerson}"></td>
                             <td th:text="${data.noofDaysWorked}"></td>
                             <td th:text="${data.totalMonthlyWages}"></td>
                             <td th:text="${data.ipContribution}"></td>
-                            <td th:text="${data.reason}">-</td>
+                            <td><p class="text-muted">-</p></td>
                         </tr>
                         </tbody>
                     </table>
@@ -287,6 +312,21 @@
             //请求后台 url ，forword 真实html——file.path
             var url = "/upload/" + esiPdfName;
             var modalDialog = window.open(url, obj, "height=400, width=500,top=100,left=100");
+            console.log("ModalDialog", modalDialog)
+        }
+    }
+
+    function restructureEsiPdf(esiPdfName) {
+        if (esiPdfName == '') {
+            alert("pdf not upload!!!");
+        }
+        console.log("printEsiPdf:esiPdfName", esiPdfName);
+        if (esiPdfName != '') {
+            var obj = new Object();
+            obj.name = "esi";
+            //请求后台 url ，forword 真实html——file.path
+            var url = "/show/" + esiPdfName; //1366x768
+            var modalDialog = window.open(url, obj, "height=700, width=1000,top=100,left=100");
             console.log("ModalDialog", modalDialog)
         }
     }

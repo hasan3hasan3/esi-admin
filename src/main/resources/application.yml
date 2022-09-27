@@ -18,7 +18,7 @@ spring:
       connection-test-query: select 1
       auto-commit: true
   jpa:
-    show-sql: false
+    show-sql: true
     open-in-view: false
     hibernate:
       ddl-auto: update
