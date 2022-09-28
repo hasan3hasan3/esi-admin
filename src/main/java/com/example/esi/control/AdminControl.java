@@ -26,6 +26,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
@@ -58,8 +60,10 @@ public class AdminControl {
     }
 
     @RequestMapping("/e2xsl")
+    @ResponseBody
+
     public String e2txt() {
-        return "e2xsl";
+        return "goto:esi-web download by input-name(12345678XXX for esi-admin excelName).xls";
     }
 
     @RequestMapping("/e2pdf")
@@ -97,6 +101,8 @@ public class AdminControl {
      * @param response
      * @throws IOException
      */
+
+    @Deprecated
     @PostMapping("/excel2xsl")
     public void xls(MultipartFile file, HttpServletResponse response) throws IOException {
         List listCol = new ArrayList<>();
@@ -143,6 +149,8 @@ public class AdminControl {
 
         // 通过工具类创建writer，默认创建xls格式
         ExcelWriter writer = ExcelUtil.getWriter();
+        writer.disableDefaultStyle();
+
         //todo 表头应该是一行
         List<String> row1 = CollUtil.newArrayList("Employees' State Insurance Corporation", "Contribution History Of 22001290260001099 for Jan2022");
         writer.writeRow(row1);
@@ -305,9 +313,8 @@ public class AdminControl {
         htmlData.setEmployerCode(employerCode);
         htmlData.setPdfViewDate(pdfViewDate);
 
-        JSONObject json = JSONUtil.parseObj(htmlData);
+        //JSONObject json = JSONUtil.parseObj(htmlData);
         String jsonStr = JSONUtil.toJsonPrettyStr(htmlData);
-        model.addAttribute("htmlData", jsonStr);
         //log.info("json:{}", json);
         //todo
         HistoryTotal historyTotal = new HistoryTotal();
@@ -317,8 +324,13 @@ public class AdminControl {
         historyTotal.setTotalMonthlywages(NumberUtil.decimalFormat("0.00", monthlyWages));
         historyTotal.setTotalGovernmentContribution("0.00");
 
-        viewContributionHistoryService.excel2db(jsonStr, historyTotal, map, period, pdfViewDate, employerCode);
+        HistoryTotal HistoryTotalDB =  viewContributionHistoryService.excel2db(jsonStr, historyTotal, map, period, pdfViewDate, employerCode);
         //组装新的实体对象，保存到数据库。
+
+        model.addAttribute("pdfid", HistoryTotalDB.getId());
+        //log.info("pdfid:{}", HistoryTotalDB.getId());
+
+        model.addAttribute("htmlData", jsonStr);
 
         return "pdf";
     }

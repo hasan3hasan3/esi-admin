@@ -9,8 +9,8 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/esi?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT
 
     hikari:
-      minimum-idle: 20
-      maximum-pool-size: 60
+      minimum-idle: 50
+      maximum-pool-size: 600
       idle-timeout: 30000
       max-lifetime: 1800000
       connection-timeout: 60000
@@ -18,7 +18,7 @@ spring:
       connection-test-query: select 1
       auto-commit: true
   jpa:
-    show-sql: true
+    show-sql: false
     open-in-view: false
     hibernate:
       ddl-auto: update
@@ -28,7 +28,7 @@ spring:
   servlet:
     multipart:
       #location: /tmp
-      max-file-size: 20MB
+      max-file-size: 50MB
       max-request-size: 100MB
 #  mvc:
 #    async:

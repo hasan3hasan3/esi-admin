@@ -45,4 +45,8 @@ public class HistoryTotal {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private PdfJson pdfJson;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Challan challan;
 }

@@ -29,6 +29,7 @@
 	</head>
 	<body>
 	<textarea hidden id="esicData" th:text="${htmlData}"></textarea>
+	<input type="hidden" id="pdfid" th:value="${pdfid}"></input>
 
 
 	<button id="previewAndDown" onclick="previewAndDown()" style="position: fixed; z-index: 100">SavePDF</button>

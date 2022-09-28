@@ -24,8 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +35,7 @@ import java.util.List;
 public class ContributionControl {
     //todo
     //根据时间 ，查询列表。
-    static Logger log = LoggerFactory.getLogger(AdminControl.class);
+    static Logger log = LoggerFactory.getLogger(ContributionControl.class);
 
     ViewContributionHistoryService viewContributionHistoryService;
 
@@ -97,10 +99,16 @@ public class ContributionControl {
     @PostMapping("/uploadEsiPdf")
     @ResponseBody
     public String uploadEsiPdf(HttpServletRequest request) {
-        log.info("-----id:{}", request.getParameter("id"));
+        //log.info("-----id:{}", request.getParameter("id"));
         List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("file");
-        log.info("-----fileList0:{}", fileList);
-        fileList.stream().filter(file -> !ObjectUtils.isEmpty(file)).forEach(filePdf -> uploadFile(filePdf, request.getParameter("id")));
+        //log.info("-----fileList0:{}", fileList);
+        fileList.stream().filter(file -> !ObjectUtils.isEmpty(file)).forEach(filePdf -> {
+            try {
+                uploadFile(filePdf, request.getParameter("id"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         return "success";
     }
 
@@ -113,29 +121,32 @@ public class ContributionControl {
         this.pdfJsonRepository = pdfJsonRepository;
     }
 
-    private void uploadFile(MultipartFile file, String id) {
+    private void uploadFile(MultipartFile file, String id) throws IOException {
 
         String filename = file.getOriginalFilename();
         BufferedOutputStream out = FileUtil.getOutputStream(uploadFolder + filename);
+        InputStream in = file.getInputStream();
+        long copySize = 0;
         try {
-            long copySize = IoUtil.copy(file.getInputStream(), out, IoUtil.DEFAULT_BUFFER_SIZE);
+            copySize = IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE);
             if (copySize > 0 && !StrUtil.isEmpty(id)) {
                 HistoryTotal historyTotal = viewContributionHistoryService.getHistoryTotal(Long.parseLong(id));
-                historyTotal.setEsiPdfName(filename);
                 //todo
                 //这里上传pdf 的时候，自动产生excel的名字，在本地c:\\esixls中创建相同名字的xls
                 Date date = DateUtil.date();
                 String format = DateUtil.format(date, "ssmmHHddMMyyyy");
                 historyTotal.setEsiExcelName(format + ".xls");
+                historyTotal.setEsiPdfName(filename);
                 viewContributionHistoryService.saveHistoryTotal(historyTotal);
-
-                PdfJson pdfJson = pdfJsonRepository.findById(Long.parseLong(id)).get();
-                pdfJson.setPdfName(filename);
-                pdfJsonRepository.save(pdfJson);
+                //PdfJson pdfJson = pdfJsonRepository.findById(Long.parseLong(id)).get();
+                //pdfJson.setPdfName(filename);
+                //pdfJsonRepository.save(pdfJson);
             }
             //log.info("copySize:{}", copySize);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } finally {
+            //log.info("copySize:{}", copySize);
+            IoUtil.close(out);
+            IoUtil.close(in);
         }
     }
 

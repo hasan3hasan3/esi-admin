@@ -153,26 +153,10 @@ public class ApiControl {
         this.pdfJsonRepository = pdfJsonRepository;
     }
 
-    @RequestMapping("/show/{filename}")
-    public String downPdfbyFileName(Model model, @PathVariable("filename") String filename) {
-        log.info("in downPdf -----s{}", filename);
-        PdfJson pdfJson = pdfJsonRepository.findByPdfName(filename);
-        JSONObject json = JSONUtil.parseObj(pdfJson.getJson());
-
-        model.addAttribute("htmlData", json);
-        //Date date = DateUtil.date();
-        //String formatd = DateUtil.format(date, "dd/MM/yyyy");
-        //SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ssaaa", Locale.ENGLISH);
-        //model.addAttribute("utime", sdf.format(new Date()));
-        //model.addAttribute("udate", formatd);
-
-        return "pdf";
-    }
-
-    //@RequestMapping("/show2/{id}")
-    //public String downPdfByid(Model model, @PathVariable("id") Long id) {
-    //    log.info("in downPdf -----s{}", id);
-    //    PdfJson pdfJson = pdfJsonRepository.findById(id).get();
+    //@RequestMapping("/show/{filename}")
+    //public String downPdfbyFileName(Model model, @PathVariable("filename") String filename) {
+    //    log.info("in downPdf -----s{}", filename);
+    //    PdfJson pdfJson = pdfJsonRepository.findByPdfName(filename);
     //    JSONObject json = JSONUtil.parseObj(pdfJson.getJson());
     //
     //    model.addAttribute("htmlData", json);
@@ -184,5 +168,21 @@ public class ApiControl {
     //
     //    return "pdf";
     //}
+
+    @RequestMapping("/show/{id}")
+    public String downPdfByid(Model model, @PathVariable("id") Long id) {
+        log.info("in downPdf -----s{}", id);
+        PdfJson pdfJson = pdfJsonRepository.findById(id).get();
+        JSONObject json = JSONUtil.parseObj(pdfJson.getJson());
+
+        model.addAttribute("htmlData", json);
+        //Date date = DateUtil.date();
+        //String formatd = DateUtil.format(date, "dd/MM/yyyy");
+        //SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ssaaa", Locale.ENGLISH);
+        //model.addAttribute("utime", sdf.format(new Date()));
+        //model.addAttribute("udate", formatd);
+
+        return "pdf";
+    }
 
 }

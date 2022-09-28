@@ -28,5 +28,7 @@ public class Challan {
 
     @OneToOne(cascade = CascadeType.ALL)
     private TransactionDetails transactionDetails;
-
+    //@OneToOne(cascade = CascadeType.ALL, mappedBy = "pdfJson")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "challan", orphanRemoval = true)
+    private HistoryTotal historyTotal;
 }

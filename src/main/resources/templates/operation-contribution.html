@@ -128,11 +128,13 @@
                                     <span class="text-success" th:text="${dataH.getEsiPdfName()}"></span>
                                 </button>
                                 <button type="button" class="btn btn-link"
-                                        th:onclick="restructureEsiPdf([[${dataH.getEsiPdfName()}]])">
+                                        th:onclick="restructureEsiPdf([[${dataH.getId()}]])">
                                     <span class="text-primary">restructure-pdf-test</span>
                                 </button>
                             </td>
-                            <td th:text="${dataH.getEsiExcelName()}"></td>
+                            <td>
+                                <span class="text-danger" th:text="${dataH.getEsiExcelName()}"></span>
+                            </td>
                             <td th:text="${dataH.getTotalIpContribution()}"></td>
                             <td th:text="${dataH.getTotalEmployerContribution()}"></td>
                             <td th:text="${dataH.getTotalContribution()}"></td>
@@ -275,8 +277,10 @@
     }
 
     function uploadEsiPdf(fileData, period, employerCode) {
+
         $.ajax('/uploadEsiPdf', {
             method: 'POST',
+            async: false,
             data: fileData,
             processData: false, // 默认 | 不处理数据
             contentType: false, // 默认 | 不设置内容类型
@@ -316,16 +320,16 @@
         }
     }
 
-    function restructureEsiPdf(esiPdfName) {
-        if (esiPdfName == '') {
+    function restructureEsiPdf(esiPdfId) {
+        if (esiPdfId == '') {
             alert("pdf not upload!!!");
         }
-        console.log("printEsiPdf:esiPdfName", esiPdfName);
-        if (esiPdfName != '') {
+        //console.log("printEsiPdf:esiPdfName", esiPdfId);
+        if (esiPdfId != '') {
             var obj = new Object();
             obj.name = "esi";
             //请求后台 url ，forword 真实html——file.path
-            var url = "/show/" + esiPdfName; //1366x768
+            var url = "/show/" + esiPdfId; //1366x768
             var modalDialog = window.open(url, obj, "height=700, width=1000,top=100,left=100");
             console.log("ModalDialog", modalDialog)
         }

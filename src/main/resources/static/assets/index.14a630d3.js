@@ -97,4 +97,4 @@ Arguments: `+Array.prototype.slice.call(r).join("")+`
     <div class="pl-[14px] w-[261.5px] border-svg-tl">${s}</div>
     <div class="pl-[20px] w-[433px] border-svg-tl">${r}</div>
     <div class="pl-[20px] w-[295px] border-svg-tl">${a}</div>
-  `,document.querySelector(".current-month").innerHTML=`Contribution History Of ${Pt} for &nbsp; ${Rn}`;var i= Math.floor(Math.random()*90) + 10;document.title=`ContributionPrint.aspx(${i})`}On(Ms,Ds);Fn();Nn(Ms,Ds)});export default Ln();
+  `,document.querySelector(".current-month").innerHTML=`Contribution History Of ${Pt} for &nbsp; ${Rn}`;var i= $('#pdfid').val();document.title=`ContributionPrint.aspx`}On(Ms,Ds);Fn();Nn(Ms,Ds)});export default Ln();

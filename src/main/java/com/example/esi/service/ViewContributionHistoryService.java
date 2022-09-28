@@ -60,8 +60,8 @@ public class ViewContributionHistoryService {
 
         String strMMM = StrUtil.sub("2022Sep", 0, 4);
         String stryyyy = StrUtil.sub("2022Sep", 4, 7);
-        log.info("{}", strMMM);
-        log.info("{}", stryyyy);
+        //log.info("{}", strMMM);
+        //log.info("{}", stryyyy);
 
     }
 
@@ -108,7 +108,7 @@ public class ViewContributionHistoryService {
         Page<HistoryTotal> historyTotal = historyTotalRepository.findAll(PageRequest.of(p - 1, 20, Sort.by("id").descending()));
         return historyTotal;
     }
-
+    @Transactional
     public HistoryTotal saveHistoryTotal(HistoryTotal historyTotal) {
         return historyTotalRepository.saveAndFlush(historyTotal);
     }
@@ -139,7 +139,6 @@ public class ViewContributionHistoryService {
         historyTotal.setPeriod(period);
         historyTotal.setPdfViewDate(pdfViewDate);
         historyTotal.setEmployerCode(employerCode);
-
 
         List<Contribution> contributionList = new ArrayList<Contribution>();
 
@@ -187,11 +186,13 @@ public class ViewContributionHistoryService {
         challanRepository.save(challan);
         //ExcelUtil.readBySax(file.getInputStream(), 0, createRowHandler());
 
-        //xls(htmlData,response);
         PdfJson pdfJson = new PdfJson();
+        //xls(htmlData,response);
         pdfJson.setJson(jsonStr);
         pdfJson.setHistoryTotal(historyTotal);
         pdfJsonRepository.save(pdfJson);
+        historyTotal.setPdfJson(pdfJson);
+        historyTotal.setChallan(challan);
 
         return historyTotal;
     }
