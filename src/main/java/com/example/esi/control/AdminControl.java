@@ -174,7 +174,7 @@ public class AdminControl {
         // 11:52:25 AM	Page -1 of 1	Printed On:	2022/9/22
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss aaa", Locale.ENGLISH);
         //System.out.printf(sdf.format(new Date()));
-        String today= DateUtil.today();
+        String today = DateUtil.today();
         List<String> rowe = CollUtil.newArrayList(sdf.format(new Date()), "Page -1 of 1", "Printed On", today);
         writer.writeRow(rowe);
 
@@ -314,7 +314,9 @@ public class AdminControl {
         htmlData.setPdfViewDate(pdfViewDate);
 
         //JSONObject json = JSONUtil.parseObj(htmlData);
-        String jsonStr = JSONUtil.toJsonPrettyStr(htmlData);
+        //String jsonStr = JSONUtil.toJsonPrettyStr(htmlData);
+        String jsonStr = JSONUtil.toJsonStr(htmlData);
+
         //log.info("json:{}", json);
         //todo
         HistoryTotal historyTotal = new HistoryTotal();
@@ -324,7 +326,7 @@ public class AdminControl {
         historyTotal.setTotalMonthlywages(NumberUtil.decimalFormat("0.00", monthlyWages));
         historyTotal.setTotalGovernmentContribution("0.00");
 
-        HistoryTotal HistoryTotalDB =  viewContributionHistoryService.excel2db(jsonStr, historyTotal, map, period, pdfViewDate, employerCode);
+        HistoryTotal HistoryTotalDB = viewContributionHistoryService.excel2db(jsonStr, historyTotal, map, period, pdfViewDate, employerCode);
         //组装新的实体对象，保存到数据库。
 
         model.addAttribute("pdfid", HistoryTotalDB.getId());

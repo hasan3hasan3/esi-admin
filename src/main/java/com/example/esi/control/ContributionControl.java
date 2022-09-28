@@ -121,6 +121,21 @@ public class ContributionControl {
         this.pdfJsonRepository = pdfJsonRepository;
     }
 
+    @GetMapping("/createEsiXslName")
+    @ResponseBody
+    private String createEsiXslName(Long id) {
+        if (id <= 0) {
+            return "not has id";
+        }
+        HistoryTotal historyTotal = viewContributionHistoryService.getHistoryTotal(id);
+        Date date = DateUtil.date();
+        String format = DateUtil.format(date, "ssmmHHddMMyyyy");
+        historyTotal.setEsiExcelName(format + ".xls");
+        //historyTotal.setEsiPdfName(format+ ".pdf");
+        viewContributionHistoryService.saveHistoryTotal(historyTotal);
+        return historyTotal.getEsiExcelName();
+    }
+
     private void uploadFile(MultipartFile file, String id) throws IOException {
 
         String filename = file.getOriginalFilename();

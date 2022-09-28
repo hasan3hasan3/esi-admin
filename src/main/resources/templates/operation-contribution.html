@@ -78,6 +78,11 @@
                                     </button>
                                 </th>
                                 <th class="text-center">
+                                <button type="button" class="btn btn-warning"
+                                        th:onclick="createEsiXslName([[${period}]],[[${employerCode}]])">createEsiXslName
+                                </button>
+                                </th>
+                                <th class="text-center">
                                     <input accept=".pdf" multiple name="file" placeholder="esiPdf"
                                            id="upload_esiPdf_file" type="file"></input>
                                 </th>
@@ -274,6 +279,14 @@
             alert('file is null !!!');
             return false;
         }
+    }
+    function createEsiXslName(period, employerCode) {
+        var contributionId = $("#contributionId").val();
+        $.get(`/createEsiXslName?id=${contributionId}`, function(data){
+            alert(data);
+            location.href = '/op2contribution?period=' + period + "&employerCode=" + employerCode;
+
+        });
     }
 
     function uploadEsiPdf(fileData, period, employerCode) {
