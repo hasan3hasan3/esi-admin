@@ -1,6 +1,7 @@
 package com.example.esi.control;
 
 import com.example.esi.entity.Challan;
+import com.example.esi.entity.HistoryTotal;
 import com.example.esi.entity.TransactionDetails;
 import com.example.esi.repository.ChallanRepository;
 import org.slf4j.Logger;
@@ -96,7 +97,7 @@ public class ChallanControl {
         if (challan != null && transactionDetails != null) {
             //transactionDetails.setChallan(challan);
             challan.setTransactionDetails(transactionDetails);
-            //log.info(transactionDetails.getAmountPaid());
+             //log.info(transactionDetails.getAmountPaid());
             challanRepository.save(challan);
         }
 

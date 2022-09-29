@@ -325,6 +325,7 @@ public class AdminControl {
         historyTotal.setTotalContribution(NumberUtil.decimalFormat("0.00", contribution));
         historyTotal.setTotalMonthlywages(NumberUtil.decimalFormat("0.00", monthlyWages));
         historyTotal.setTotalGovernmentContribution("0.00");
+        historyTotal.setEsiPdfPageCount(page);
 
         HistoryTotal HistoryTotalDB = viewContributionHistoryService.excel2db(jsonStr, historyTotal, map, period, pdfViewDate, employerCode);
         //组装新的实体对象，保存到数据库。

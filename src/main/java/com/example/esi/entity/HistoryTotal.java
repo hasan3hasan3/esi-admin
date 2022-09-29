@@ -34,7 +34,7 @@ public class HistoryTotal {
     @Column(scale = 2)
     private String totalMonthlywages;
 
-
+    private int esiPdfPageCount;
     private String esiPdfName;
     private String esiExcelName;
 

@@ -15,19 +15,15 @@ public class PdfJson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)//自增
     private Long id;
 
-    //@OneToOne(cascade = CascadeType.ALL, mappedBy = "pdfJson")
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "pdfJson", orphanRemoval = true)
-    private HistoryTotal historyTotal;
-
-
     @Column(length = 500)
     private String pdfName;
     //htmlData
     @Column(columnDefinition = "LONGTEXT")
     private String json;
-
-    private String utime;
-    private String udate;
-
+    //private String utime;
+    //private String udate;
+    //@OneToOne(cascade = CascadeType.ALL, mappedBy = "pdfJson")
+    @OneToOne
+    private HistoryTotal historyTotal;
 
 }
