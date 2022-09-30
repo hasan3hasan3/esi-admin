@@ -132,14 +132,14 @@
                             <label for="challanCreatedDate">Challan Created Date:</label>
                             <input class="form-control input-sm" id="challanCreatedDate" name="challanCreatedDate"
                                    th:value="${challan.getTransactionDetails().getChallanCreatedDate()}"
-                                   onclick="WdatePicker({dateFmt:'dd-MMM-yyyy HH:mm:ss'})"
+                                   onclick="WdatePicker({dateFmt:'dd-MM-yyyy HH:mm:ss'})"
                                    type="text"/>
                         </div>
                         <div class="col-sm-4">
                             <label for="challanSubmittedDate">Challan Submitted Date:</label>
                             <input class="form-control input-sm" id="challanSubmittedDate" name="challanSubmittedDate"
                                    th:value="${challan.getTransactionDetails().getChallanSubmittedDate()}"
-                                   onclick="WdatePicker({dateFmt:'dd-MMM-yyyy HH:mm:ss'})"
+                                   onclick="WdatePicker({dateFmt:'dd-MM-yyyy HH:mm:ss'})"
                                    type="text"/>
                         </div>
                         <div class="col-sm-4">
