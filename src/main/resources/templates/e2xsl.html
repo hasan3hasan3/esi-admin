@@ -23,7 +23,7 @@
             </ul>
         </div>
         <ul class="nav navbar-nav navbar-right">
-            <li class="navbar-text"><small>admin:<span th:text="${session.userName}"></span></small></li>
+<!--            <li class="navbar-text"><small>admin:<span th:text="${session.userName}"></span></small></li>-->
             <li class="navbar-text"><small id="current-time"></small></li>
 
         </ul>
@@ -58,11 +58,7 @@
                 <div class="panel-heading">Modify Challan</div>
                 <div class="panel-body">
                     <div class="col-sm-4">
-                        <label>Employer Code * ：</label>
-                        <select class="form-control">
-                            <option selected>67000909350001099</option>
-                            <option>22001290260001099</option>
-                        </select>
+                        <div th:include="employer-code::employerCode-name"></div>
                     </div>
                     <div class="col-sm-4">
                         <label for="mmyyyy">Period：</label>

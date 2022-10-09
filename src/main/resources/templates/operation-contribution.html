@@ -24,7 +24,7 @@
             </ul>
         </div>
         <ul class="nav navbar-nav navbar-right">
-            <li class="navbar-text"><small>admin:<span th:text="${session.userName}"></span></small></li>
+<!--            <li class="navbar-text"><small>admin:<span th:text="${session.userName}"></span></small></li>-->
             <li class="navbar-text"><small id="current-time"></small></li>
 
         </ul>
@@ -56,13 +56,8 @@
                         <table class="table table-condensed table-hover table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th>Employer Code *
-                                    <select class="form-control" id="employerCode" name="employerCode">
-                                        <option th:selected="${'67000909350001099' eq employerCode}">67000909350001099
-                                        </option>
-                                        <option th:selected="${'22001290260001099' eq employerCode}">22001290260001099
-                                        </option>
-                                    </select>
+                                <th>
+                                    <div th:include="employer-code::employerCode-name"></div>
                                 </th>
                                 <th>Period *
                                     <input class="form-control" id="period" name="period"
@@ -83,15 +78,15 @@
                                         createEsiXslName
                                     </button>
                                 </th>
-                                <th class="text-center">
-                                    <input accept=".pdf" multiple name="file" placeholder="esiPdf"
-                                           id="upload_esiPdf_file" type="file"></input>
-                                </th>
-                                <th class="text-center">
-                                    <button type="button" class="btn btn-primary"
-                                            th:onclick="upload_esiPdf([[${period}]],[[${employerCode}]])">uploadEsiPdf
-                                    </button>
-                                </th>
+<!--                                <th class="text-center">-->
+<!--                                    <input accept=".pdf" multiple name="file" placeholder="esiPdf"-->
+<!--                                           id="upload_esiPdf_file" type="file"></input>-->
+<!--                                </th>-->
+<!--                                <th class="text-center">-->
+<!--                                    <button type="button" class="btn btn-primary"-->
+<!--                                            th:onclick="upload_esiPdf([[${period}]],[[${employerCode}]])">uploadEsiPdf-->
+<!--                                    </button>-->
+<!--                                </th>-->
                                 <!--                                <th class="text-center">-->
                                 <!--                                    <button type="button" class="btn btn-primary"-->
                                 <!--                                            th:onclick="uploadEsiExcel([[${period}]],[[${employerCode}]])">uploadEsiExcel-->
@@ -129,10 +124,10 @@
                             <tr th:if="${dataH != null}">
                                 <td th:text="${dataH.getId()}"></td>
                                 <td>
-                                    <button type="button" class="btn btn-link"
-                                            th:onclick="printEsiPdf([[${dataH.getEsiPdfName()}]])">
-                                        <span class="text-success" th:text="${dataH.getEsiPdfName()}"></span>
-                                    </button>
+<!--                                    <button type="button" class="btn btn-link"-->
+<!--                                            th:onclick="printEsiPdf([[${dataH.getEsiPdfName()}]])">-->
+<!--                                        <span class="text-success" th:text="${dataH.getEsiPdfName()}"></span>-->
+<!--                                    </button>-->
                                     <button type="button" class="btn btn-link"
                                             th:onclick="restructureEsiPdf([[${dataH.getId()}]])">
                                         <span class="text-primary">restructure-pdf-test</span>

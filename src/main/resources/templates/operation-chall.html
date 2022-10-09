@@ -25,7 +25,7 @@
             </ul>
         </div>
         <ul class="nav navbar-nav navbar-right">
-            <li class="navbar-text"><small>admin:<span th:text="${session.userName}"></span></small></li>
+<!--            <li class="navbar-text"><small>admin:<span th:text="${session.userName}"></span></small></li>-->
             <li class="navbar-text"><small id="current-time"></small></li>
 
         </ul>
@@ -67,15 +67,8 @@
                         <table class="table table-condensed table-hover table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th>Employer Code *
-                                    <select class="form-control" id="employerCode" name="employerCode">
-                                        <option th:selected="${'67000909350001099' eq employerCode}">
-                                            67000909350001099
-                                        </option>
-                                        <option th:selected="${'22001290260001099' eq employerCode}">
-                                            22001290260001099
-                                        </option>
-                                    </select>
+                                <th>
+                                    <div th:include="employer-code::employerCode-name"></div>
                                 </th>
                                 <th>Challan Created Month *
                                     <input class="form-control" id="period" name="period"
