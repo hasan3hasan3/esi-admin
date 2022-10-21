@@ -8,7 +8,7 @@ spring:
     username: root
     password: 1qaz@WSX
     #url: jdbc:mysql://101.36.160.140:21029/esi?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT
-    url: jdbc:mysql://127.0.0.1:3306/esi?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT
+    url: jdbc:mysql://127.0.0.1:3306/esi?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT&allowPublicKeyRetrieval=true
 
     hikari:
       minimum-idle: 50

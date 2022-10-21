@@ -69,7 +69,7 @@ Arguments: `+Array.prototype.slice.call(r).join("")+`
     <div class="w-[190px] pl-[8px] border-svg-tl pt-[24px]">${s.contribution}</div>
     <div class="w-[360px] flex-1 pl-[24px] border-svg-tl pt-[24px]">${s.reason?s.reason:"-"}</div>
   </div>
-  `}for(let s=1;s<e.length;s++){const r=e[s];s===e.length-1?t+=`<div class="tr flex leading-[52px]" style="min-height:50px">
+  `}for(let s=1;s<e.length;s++){const r=e[s];s===e.length-1?t+=`<div class="tr flex leading-[41px]" style="min-height:41px">
       <div class="w-[120px] pl-[16px] border-svg-fbl">${r.sNo}</div>
       <div class="w-[158px] border-l-0 pl-[12px] border-svg-bl">${r.isDisable?r.isDisable:"-"}</div>
       <div class="w-[228px] border-l-0 pl-[6px] border-svg-bl">${r.number}</div>

@@ -13,12 +13,17 @@ import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 
+import cn.hutool.poi.excel.StyleSet;
 import com.example.esi.entity.*;
 import com.example.esi.pojo.HtmlData;
 import com.example.esi.pojo.PageDate;
 import com.example.esi.pojo.TotalData;
 import com.example.esi.service.ViewContributionHistoryService;
 import com.example.esi.util.ExcelOperationHelp;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +68,8 @@ public class AdminControl {
     @ResponseBody
 
     public String e2txt() {
-        return "goto:esi-web download by input-name(12345678XXX for esi-admin excelName).xls";
+        //return "goto:esi-web download by input-name(12345678XXX for esi-admin excelName).xls";
+        return "e2xsl";
     }
 
     @RequestMapping("/e2pdf")
@@ -104,7 +110,11 @@ public class AdminControl {
 
     @Deprecated
     @PostMapping("/excel2xsl")
-    public void xls(MultipartFile file, HttpServletResponse response) throws IOException {
+    public void xls(MultipartFile file, HttpServletResponse response, HttpServletRequest request) throws IOException {
+        String period = request.getParameter("period");
+        //String pdfViewDate = request.getParameter("pdfViewDate");
+        String employerCode = request.getParameter("employerCode");
+
         List listCol = new ArrayList<>();
         double ipContribution = 0, employerContribution = 0, contribution = 0, monthlyWages = 0;
         ExcelReader reader = ExcelUtil.getReader(file.getInputStream());
@@ -116,8 +126,8 @@ public class AdminControl {
 
             Object obj0 = list.get(0);
             Object obj1 = list.get(1);
-            Object obj2 = list.get(2);
-            Object obj3 = list.get(3);
+            Object obj2 = list.get(3);
+            Object obj3 = list.get(2);
             //Object obj4 = list.get(4);
 
             //  total wage
@@ -132,7 +142,11 @@ public class AdminControl {
 
             monthlyWages += d2;
 
-            listCol.add(CollUtil.newArrayList(i, '-', obj0, String.valueOf(obj1).toUpperCase(), obj3, d2format, d4format, '-'));
+            String endRowStr = "-";
+            if (d4 == 0) {
+                endRowStr = "On Leave";
+            }
+            listCol.add(CollUtil.newArrayList(i + "", '-', String.valueOf(obj0), obj1.toString().toUpperCase(), String.valueOf(obj3), d2format, d4format, endRowStr));
 
         }
         TotalData totalData = new TotalData();
@@ -149,20 +163,45 @@ public class AdminControl {
 
         // 通过工具类创建writer，默认创建xls格式
         ExcelWriter writer = ExcelUtil.getWriter();
-        writer.disableDefaultStyle();
+        Font font = writer.createFont();
+        font.setFontName("Arial");
+        font.setFontHeightInPoints((short) 10);
+        //writer.disableDefaultStyle();
 
+        writer.getStyleSet().setFont(font, false);
+
+        StyleSet style = writer.getStyleSet();
+        CellStyle cellStyle = style.getHeadCellStyle();
+        //cellStyle.setFillBackgroundColor((short)0);
+        cellStyle.setBorderBottom(BorderStyle.NONE);
+        cellStyle.setBorderTop(BorderStyle.NONE);
+        cellStyle.setBorderRight(BorderStyle.NONE);
+        cellStyle.setBorderLeft(BorderStyle.NONE);
+
+        //style.setBackgroundColor(IndexedColors.AUTOMATIC, true);
+        //style.getCellStyle().setShrinkToFit(true);
+        style.getCellStyle().setBorderBottom(BorderStyle.NONE);
+        style.getCellStyle().setBorderTop(BorderStyle.NONE);
+        style.getCellStyle().setBorderRight(BorderStyle.NONE);
+        style.getCellStyle().setBorderLeft(BorderStyle.NONE);
+
+
+        String row1Str = "Contribution History Of " + employerCode + " for " + period;
         //todo 表头应该是一行
-        List<String> row1 = CollUtil.newArrayList("Employees' State Insurance Corporation", "Contribution History Of 22001290260001099 for Jan2022");
+        List<String> row1 = CollUtil.newArrayList("Employees' State Insurance Corporation", row1Str);
         writer.writeRow(row1);
-
         // 一次性写出内容，使用默认样式，强制输出标题
-        writer.addHeaderAlias("ipContribution", "Total IP Contribution");
-        writer.addHeaderAlias("employerContribution", "Total Employer Contribution");
-        writer.addHeaderAlias("contribution", "Total Contribution");
-        writer.addHeaderAlias("governmentContribution", "Total Government Contribution");
-        writer.addHeaderAlias("monthlyWages", "Total Monthly Wages");
-        List<TotalData> row2 = CollUtil.newArrayList(totalData);
-        writer.write(row2, true);
+//        writer.addHeaderAlias("ipContribution", "Total IP Contribution");
+//        writer.addHeaderAlias("employerContribution", "Total Employer Contribution");
+//        writer.addHeaderAlias("contribution", "Total Contribution");
+//        writer.addHeaderAlias("governmentContribution", "Total Government Contribution");
+//        writer.addHeaderAlias("monthlyWages", "Total Monthly Wages");
+        List<String> row2 = CollUtil.newArrayList("Total IP Contribution", "Total Employer Contribution", "Total Contribution", "Total Government Contribution", "Total Monthly Wages");
+        writer.writeRow(row2);
+
+        List<TotalData> row3 = CollUtil.newArrayList(totalData);
+        writer.writeRow(row3);
+
 
         writer.passCurrentRow();
         writer.passCurrentRow();
@@ -172,10 +211,10 @@ public class AdminControl {
         writer.write(listCol);
 
         // 11:52:25 AM	Page -1 of 1	Printed On:	2022/9/22
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss aaa", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss aa", Locale.ENGLISH);
         //System.out.printf(sdf.format(new Date()));
-        String today = DateUtil.today();
-        List<String> rowe = CollUtil.newArrayList(sdf.format(new Date()), "Page -1 of 1", "Printed On", today);
+        SimpleDateFormat sdfD = new SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH);
+        List<String> rowe = CollUtil.newArrayList(sdf.format(new Date()), "Page -1 of 1", "Printed On", sdfD.format(new Date()));
         writer.writeRow(rowe);
 
         //out为OutputStream，需要写出到的目标流
@@ -253,7 +292,11 @@ public class AdminControl {
             } else {
                 pageDate.setName(String.valueOf(obj1).toUpperCase().trim());
             }
-            pageDate.setDays(String.valueOf(obj3));
+            String strDays = String.valueOf(obj3);
+            if (strDays.equals(0)) {
+                strDays = "OnLeave";
+            }
+            pageDate.setDays(strDays);
             pageDate.setWages(d2format);
 
             monthlyWages += d2;
