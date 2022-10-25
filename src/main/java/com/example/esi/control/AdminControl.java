@@ -293,7 +293,7 @@ public class AdminControl {
                 pageDate.setName(String.valueOf(obj1).toUpperCase().trim());
             }
             String strDays = String.valueOf(obj3);
-            if (strDays.equals(0)) {
+            if (strDays != null && strDays.trim().equals("0")) {
                 strDays = "OnLeave";
             }
             pageDate.setDays(strDays);
