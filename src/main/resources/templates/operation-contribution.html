@@ -284,7 +284,8 @@
             return false;
         } else {
             $.get(`/createEsiXslName?id=${contributionId}`, function (data) {
-                alert(data);
+                //alert(data);
+                //console.log(data)
                 location.href = '/op2contribution?period=' + period + "&employerCode=" + employerCode;
             });
         }

@@ -39,7 +39,7 @@ public class ExcelOperationHelp {
      */
 
     public static String strTr2S(String str) {
-        String[] strArr = str.split(" ");
+        String[] strArr = str.trim().replace("\n","").split(" ");
         String str_end = strArr[strArr.length - 1];
         String str_s = str.replaceAll(str_end, "<br/>" + str_end);
         return str_s.toUpperCase();

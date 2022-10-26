@@ -157,13 +157,8 @@ public class Test {
     static Logger log = LoggerFactory.getLogger(Test.class);
 
     public static void main(String[] args) throws IOException {
-        String strDays = String.valueOf(0);
-        if (strDays.trim().equals("0")) {
-            strDays = "OnLeave";
-        }
-        log.info("{}",strDays);
-         //xls();
-
+         xls();
+//
 //        ExcelWriter writer = ExcelUtil.getWriter("/Users/apple/hasan/123/9.xlsx");
 //
 //

@@ -2,7 +2,7 @@
 app="esi-admin-0.0.1-Beta.jar"
 app_start(){
 	echo  "${app}start..."
-	nohup java -jar -Xms1024m -Xmx2048m $app &
+	nohup java -jar -Xms512m -Xmx1024m $app &
 	echo  "${app}success"
 }
 app_stop(){

@@ -64,9 +64,9 @@ public class AdminControl {
         return "pdf";
     }
 
-    @RequestMapping("/e2xsl")
-    @ResponseBody
 
+    @Deprecated
+    @RequestMapping("/e2xsl")
     public String e2txt() {
         //return "goto:esi-web download by input-name(12345678XXX for esi-admin excelName).xls";
         return "e2xsl";
@@ -232,11 +232,6 @@ public class AdminControl {
         IoUtil.close(out);
     }
 
-    public static void main(String[] args) {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss aaa", Locale.ENGLISH);
-        System.out.printf(sdf.format(new Date()));
-    }
-
     /**
      * 上传的excel，转换成json；
      * 提供给html，待转换-pdf；
@@ -249,10 +244,9 @@ public class AdminControl {
      */
     @PostMapping("/excel2pdf")
     public String excel2pdf(Model model, MultipartFile file, HttpServletRequest request) throws IOException {
-        if (file.isEmpty()) {
+        if (file.isEmpty() || file == null) {
             return "fail";
         }
-
         HtmlData htmlData = new HtmlData();
         TotalData totalData = new TotalData();
         Map map = new HashMap<Integer, List<PageDate>>();
@@ -287,14 +281,16 @@ public class AdminControl {
             if (str1.length() >= maxStrLen) {
                 str1 = ExcelOperationHelp.strTr2S(str1);
                 //line = line - 1;
-                rowCount = rowCount + 2;
+                rowCount = rowCount + 1;
                 pageDate.setName(str1.trim());
             } else {
                 pageDate.setName(String.valueOf(obj1).toUpperCase().trim());
             }
+            //String reason ="";
             String strDays = String.valueOf(obj3);
             if (strDays != null && strDays.trim().equals("0")) {
-                strDays = "OnLeave";
+                pageDate.setReason("On Leave");
+
             }
             pageDate.setDays(strDays);
             pageDate.setWages(d2format);
@@ -305,7 +301,6 @@ public class AdminControl {
 
             pageDate.setContribution(d4format);
 
-            pageDate.setReason("");
             pageDateList.add(pageDate);
             rowCount = rowCount + 1;
             //如果字符超过21，最后空格换成回车，该页的表格行数为29-1=28行。
@@ -337,7 +332,7 @@ public class AdminControl {
         totalData.setGovernmentContribution("0.00");
 
         htmlData.setTotalData(totalData);
-        ////log.info("totalData:{}", totalData);
+        //log.info("page:{}", page);
 
         htmlData.setPageCount(page);
         htmlData.setTotalNumber(readAll.size());
